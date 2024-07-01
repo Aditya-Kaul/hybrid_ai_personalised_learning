@@ -30,13 +30,13 @@ def generate_linear_regression_plot():
     ax.set_ylabel('Y')
     ax.set_title('Linear Regression')
     ax.legend()
-
+    plt.savefig('lr', format='png')
     # Save plot to buffer
-    buf = BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    return f"data:image/png;base64,{image_base64}"
+    # buf = BytesIO()
+    # plt.savefig(buf, format='png')
+    # buf.seek(0)
+    # image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    # return f"data:image/png;base64,{image_base64}"
 
 def generate_kmeans_plot():
     # Generate sample data
@@ -59,11 +59,12 @@ def generate_kmeans_plot():
         ax.set_title(f'Step {i+1}: {title}')
 
     plt.tight_layout()
-    buf = BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    return f"data:image/png;base64,{image_base64}"
+    plt.savefig('k-means', format='png')
+    # buf = BytesIO()
+    # plt.savefig(buf, format='png')
+    # buf.seek(0)
+    # image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    # return f"data:image/png;base64,{image_base64}"
 
 
 def generate_decision_tree_plot():
@@ -93,11 +94,12 @@ def generate_decision_tree_plot():
     ax2.set_title('Decision Tree Structure')
 
     plt.tight_layout()
-    buf = BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    return f"data:image/png;base64,{image_base64}"
+    plt.savefig('decision_tree', format='png')
+    # buf = BytesIO()
+    # plt.savefig(buf, format='png')
+    # buf.seek(0)
+    # image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    # return f"data:image/png;base64,{image_base64}"
 
 
 def generate_pca_plot():
@@ -128,11 +130,12 @@ def generate_pca_plot():
         ax2.arrow(0, 0, v[0], v[1], head_width=0.1, head_length=0.1, linewidth=2, color='red')
 
     plt.tight_layout()
-    buf = BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    return f"data:image/png;base64,{image_base64}"
+    plt.savefig('PCA', format='png')
+    # buf = BytesIO()
+    # plt.savefig(buf, format='png')
+    # buf.seek(0)
+    # image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    # return f"data:image/png;base64,{image_base64}"
 
 def generate_svm_plot():
     # Generate sample data
@@ -165,8 +168,9 @@ def generate_svm_plot():
     ax.set_ylabel('Feature 2')
 
     plt.tight_layout()
-    buf = BytesIO()
-    plt.savefig(buf, format='png')
-    buf.seek(0)
-    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
-    return f"data:image/png;base64,{image_base64}"
+    plt.savefig('svm', format='png')
+    # buf = BytesIO()
+    # plt.savefig(buf, format='png')
+    # buf.seek(0)
+    # image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    # return f"data:image/png;base64,{image_base64}"

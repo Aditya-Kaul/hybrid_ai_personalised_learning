@@ -21,7 +21,7 @@ import random
 import mesop as me
 import mesop.labs as mel
 
-os.environ["OPENAI_API_KEY"] = "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"  
+os.environ["OPENAI_API_KEY"] = "api_key"  
 
 # PDF data loading
 # DATA_FOLDER = '/Users/adityakoul/Documents/ml kb/ML concept notes'
@@ -92,26 +92,37 @@ def chat():
 def transform(prompt: str, history: list[mel.ChatMessage]) -> str:
     result = qa_chain({'query': prompt, 'include_run_info': True})
     text_response = result['result']
-    if visual_checks(prompt):
-        # image_prompt = f"Create a visual explanation for: {prompt}"
-        image_url = generate_image(prompt)
-        return f"{text_response}\n\nVisual explanation: {image_url}"
-    
-    return text_response
+    enhanced_response = post_process_answer(prompt, text_response)
+
+    for concept, generator in plot_generators.items():
+        if concept in prompt.lower() and visual_checks(prompt):
+            image_data = generator()
+            return f"{enhanced_response}\n\nHere's a visual explanation of {concept.title()}:\n\n![{concept}]({image_data})"
+    return enhanced_response
 
 
-def visual_checks(query):
+def visual_checks(question):
     visual_keywords = ['plot', 'graph', 'diagram', 'visual', 'picture']
-    return any( keyword in query.lower() for keyword in visual_keywords)
+    return any( keyword in question.lower() for keyword in visual_keywords)
 
 
-def generate_image(prompt):
+def post_process_answer(question, answer):
+    enhanced_prompt = f"Enhance the following answer with a step-by-step visual explanation:\n\nQuestion: {question}\n\nAnswer: {answer}"
+    if visual_checks(question):
+        visual_explanation = generate_visual_explanation(enhanced_prompt)
+        return f"{answer}\n\n{visual_explanation}"
+    
+    visual_explanation = generate_visual_explanation(enhanced_prompt)
+    return f"{answer}\n\n{visual_explanation}"
+
+def generate_visual_explanation(prompt):
     client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-    response = client.images.generate(
-        model="dall-e-3",
-        prompt=prompt,
-        n=1,
-        size="1024x1024"
+    response = client.chat.completions.create(
+        model="gpt-4-turbo-preview",
+        messages=[
+            {"role": "system", "content": "You are an AI assistant that provides detailed visual explanations for complex concepts."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=500
     )
-    image_urls = [image.url for image in response.data]
-    return image_urls[0]
+    return response.choices[0].message.content
