@@ -29,7 +29,7 @@ The system is built on a layered architecture:
 - **Cloud Services**: [GCP]
 
 ## Getting Started
-[Include instructions on how to set up and run your project locally]
+[Include instructions on how to set up and run project locally]
 
 ```bash
 # Example commands to set up the project
