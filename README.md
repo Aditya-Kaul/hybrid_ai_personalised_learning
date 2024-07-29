@@ -16,8 +16,7 @@ The system is built on a layered architecture:
 1. User Interface Layer
 2. Application Layer
 3. Data Layer
-4. AI and Machine Learning Layer
-5. Infrastructure Layer
+4. AI and Machine Learning Layer [LLM Models]
 
 ![Architecture Diagram](uml_diagram.png)
 
