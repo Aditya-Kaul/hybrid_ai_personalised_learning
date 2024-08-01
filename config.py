@@ -448,6 +448,6 @@ if module_exercises_collection.count() == 0:
     load_module_exercises()
 
 if __name__ == "__main__":
-    print('from new_config file')
+    print('from config file')
     modules = get_modules()
     print(f"Retrieved {len(modules)} modules")

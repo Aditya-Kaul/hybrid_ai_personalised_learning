@@ -1,5 +1,5 @@
 import streamlit as st
-from new_config import get_modules, get_module_exercise, update_module_feedback
+from config import get_modules, get_module_exercise, update_module_feedback
 import random
 import json
 

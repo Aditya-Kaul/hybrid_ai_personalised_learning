@@ -1,4 +1,4 @@
-from new_config import get_module_by_name, get_module_exercise, reset_lesson_status, update_module_progress, update_module_status
+from config import get_module_by_name, get_module_exercise, reset_lesson_status, update_module_progress, update_module_status
 
 from langchain_google_genai import GoogleGenerativeAI
 api_key = 'AIzaSyDjs6-jQNsmYFcqK54Mk5zsPDIBwJlk29E'

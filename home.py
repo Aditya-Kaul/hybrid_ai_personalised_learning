@@ -1,7 +1,7 @@
 import json
 import streamlit as st
 from ai_feedback_interpret import apply_feedback
-from new_config import get_module_exercise, get_modules, get_module_by_name, get_module_status, check_module_completion, get_student_details
+from config import get_module_exercise, get_modules, get_module_by_name, get_module_status, check_module_completion, get_student_details
 import logging
 
 logging.basicConfig(level=logging.DEBUG)

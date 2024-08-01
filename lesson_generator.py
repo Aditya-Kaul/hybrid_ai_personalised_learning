@@ -1,4 +1,4 @@
-from new_config import modules_collection, textbook_collection, store_generated_lesson, get_generated_lesson, store_generated_quiz, get_generated_quiz
+from config import modules_collection, textbook_collection, store_generated_lesson, get_generated_lesson, store_generated_quiz, get_generated_quiz
 import google.generativeai as genai
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import PromptTemplate
