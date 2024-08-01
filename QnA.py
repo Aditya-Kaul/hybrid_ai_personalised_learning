@@ -1,32 +1,22 @@
 import os
-from langchain_community.document_loaders import PyPDFLoader
-
-from langchain_openai import OpenAI as LangChainOpenAI
-from langchain_openai import ChatOpenAI
-from openai import OpenAI
+from langchain_community.document_loaders import PyPDFDirectoryLoader
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains import RetrievalQA
-from langchain.indexes import VectorstoreIndexCreator
-from langchain.text_splitter import CharacterTextSplitter
 from langchain_core.prompts import PromptTemplate
-from langchain_openai import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
-from langchain_community.document_loaders import PyPDFDirectoryLoader
-
-# from langchain.vectorstores import Chroma 
 from langchain_community.vectorstores import Chroma
-from config import lessons_collection, textbook_collection
+from config import get_generated_lesson
+import streamlit as st
+import google.generativeai as genai
 
-import random
-import mesop as me
-import mesop.labs as mel
+# Set up Google API key
+api_key = 'AIzaSyDjs6-jQNsmYFcqK54Mk5zsPDIBwJlk29E'
+GOOGLE_API_KEY = api_key
+os.environ["GOOGLE_API_KEY"] = GOOGLE_API_KEY
+genai.configure(api_key=GOOGLE_API_KEY)
 
-# api_key = os.getenv("OPENAI_API_KEY")
-
-api_key = 'sk-None-1zYnoVmTO81ceVbXneJsT3BlbkFJJDp96o6aEMJCseYIaI0V'
-os.environ["OPENAI_API_KEY"] = api_key  
-
-# DATA_FOLDER = '/Users/adityakoul/Documents/ml kb/ML concept notes'
 DATA_FOLDER = '/Users/adityakoul/Documents/ml kb/Text Book'
 
 def pdf_loader(data_folder=DATA_FOLDER):
@@ -46,30 +36,31 @@ def get_or_create_vectorstore(documents, embeddings, persist_directory='./embed_
     vectorstore.persist()
     return vectorstore
 
+def get_lesson_specific_retriever():
+    module = st.session_state.current_module
+    lesson = st.session_state.current_lesson
+    print(module['module_name'], lesson['name'])
+
+    # Testing 
+    # module = 'Classification'
+    # lesson = 'Training a Binary Classifier'
+    # lesson_content = get_generated_lesson(module, lesson)
+    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    lesson_content = get_generated_lesson(module['module_name'], lesson['name'])
+    lesson_doc = Document(page_content=lesson_content['documents'][0], metadata={"source": "current_lesson"})
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/text-embedding-004")
+    vectorstore = Chroma.from_documents(documents=[lesson_doc], embedding=embeddings)
+    return vectorstore.as_retriever(search_type="similarity", search_kwargs={"k": 1})
 
 def qa_chain_model(chunk_size: int = 1500, chunk_overlap: int = 150) -> RetrievalQA:
     docs = pdf_loader()
     if not docs:
         raise ValueError("No documents were loaded. Please check the PDF file and path.")
-    
-    generated_lessons = lessons_collection.get()
-    lesson_docs = [Document(page_content=doc, metadata={"source": "generated_lesson", **metadata}) 
-                   for doc, metadata in zip(generated_lessons['documents'], generated_lessons['metadatas'])]
-    # Load textbook chunks
-    textbook_chunks = textbook_collection.get()
-    textbook_docs = [Document(page_content=doc, metadata=metadata) 
-                     for doc, metadata in zip(textbook_chunks['documents'], textbook_chunks['metadatas'])]
-    
-    # Combine documents, prioritizing generated lessons
-    all_docs = lesson_docs + textbook_docs
 
-    embeddings = OpenAIEmbeddings(api_key=api_key)
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
-    splits = text_splitter.split_documents(all_docs)
-    vectorstore = get_or_create_vectorstore(splits, embeddings)
-    # vectorstore = Chroma.from_documents(documents=splits, embedding=embeddings)
-    llm = ChatOpenAI(model_name="gpt-4o-mini-2024-07-18",temperature=0.7, max_tokens=1000,api_key=os.getenv("OPENAI_API_KEY"))
-    retriever = vectorstore.as_retriever(search_type="similarity",search_kwargs={"k": 4})
+    llm = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.7, max_output_tokens=1000)
+
+    retriever = get_lesson_specific_retriever()
     return RetrievalQA.from_chain_type(
         llm=llm,
         chain_type="stuff",
@@ -91,53 +82,13 @@ def qa_chain_model(chunk_size: int = 1500, chunk_overlap: int = 150) -> Retrieva
             )
         }
     )
-qa_chain = qa_chain_model()
 
 def transform(prompt: str) -> str:
+    qa_chain = qa_chain_model()
     result = qa_chain({'query': prompt, 'include_run_info': True})
     text_response = result['result']
-    # Check if the response is based on generated lesson content
     source_docs = result.get('source_documents', [])
     is_from_lesson = any('generated_lesson' in doc.metadata.get('source', '') for doc in source_docs)
     
-    # if is_from_lesson and exp_checks(prompt):
-    #     enhanced_response = post_process_answer(prompt, text_response)
-    # else:
-    #     enhanced_response = text_response
     enhanced_response = text_response
     return enhanced_response
-
-# def exp_checks(question):
-#     visual_keywords = ['detail', 'briefly', 'detailed','complete', 'elaborate', 'full']
-#     return any( keyword in question.lower() for keyword in visual_keywords)
-
-# def post_process_answer(question, answer):
-#     enhanced_text_prompt = f"Enhance the following answer with a step-by-step explanation:\n\nQuestion: {question}\n\nAnswer: {answer}"
-#     detailed_explanation = generate_detailed_explanation(enhanced_text_prompt)
-#     return f"{answer}\n\n{detailed_explanation}"
-
-# def generate_detailed_explanation(prompt):
-#     # client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-#     client = OpenAI(api_key=api_key)
-#     response = client.chat.completions.create(
-#         model="gpt-4o-mini-2024-07-18",
-#         messages=[
-#             {"role": "system", "content": "You are an AI assistant that provides detailed explanations for complex concepts."},
-#             {"role": "user", "content": prompt}
-#         ],
-#         max_tokens=2000
-#     )
-#     return response.choices[0].message.content
-
-
-#=========================================================================<<>>
-
-# import random
-# import mesop as me
-# import mesop.labs as mel
-
-# me.colab_run()
-
-# @me.page(path="/chat")
-# def chat():
-#     mel.chat(transform)
