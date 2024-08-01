@@ -3,7 +3,7 @@ langchain==0.0.352
 langchain-community==0.0.13
 langchain-google-genai==0.0.5
 langchain-core==0.1.10
-chromadb==0.4.18
+chromadb==0.3.29
 PyMuPDF==1.23.8
 PyPDF2==3.0.1
 google-generativeai==0.3.1
