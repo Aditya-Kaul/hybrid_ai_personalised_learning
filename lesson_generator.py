@@ -1,4 +1,4 @@
-from config import modules_collection, textbook_collection, store_generated_lesson, get_generated_lesson, store_generated_quiz, get_generated_quiz
+from new_config import modules_collection, textbook_collection, store_generated_lesson, get_generated_lesson, store_generated_quiz, get_generated_quiz
 import google.generativeai as genai
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import PromptTemplate
@@ -14,21 +14,26 @@ api_key = 'AIzaSyDjs6-jQNsmYFcqK54Mk5zsPDIBwJlk29E'
 # genai.configure(api_key='AIzaSyDhx7RmV_n1YWz4elWDnSWqP4IuqYLxac0')
 
 
-def get_or_generate_lesson(module_name, lesson_name, email):
-        # Query modules collection for module context
-    module_results = modules_collection.query(
-        query_texts=[f"{module_name} - {lesson_name}"],
-        n_results=1
-    )
-    
-    module_context = ""
-    if module_results['metadatas']:
-        context = module_results['metadatas'][0]
-        module_context = context[0]['description']
+def get_or_generate_lesson(module, lesson_name, email):
 
+    get_gen_lesson = get_generated_lesson(module['module_name'], lesson_name,email)
+    get_gen_quiz = get_generated_quiz(module['module_name'], lesson_name)
+    
+    if(lesson_name == 'Exercises'):
+        return
+    if(get_gen_lesson['metadatas']):
+        lesson_content = get_gen_lesson['documents'][0]
+        # print(get_gen_quiz)
+        return lesson_content, get_gen_quiz
+
+    module_context = ""
+    if module:
+        module_context = module['description']
+        lesson_context = next((lesson for lesson in module['lessons'] if lesson["name"] == lesson_name), None)
+        # subtopics_str = "\n".join(f"- {topic}" for topic in sub_topics)
     # Query textbook collection for relevant chunks
     textbook_results = textbook_collection.query(
-        query_texts=[f"{module_name} - {lesson_name}"],
+        query_texts=[f"{module['module_name']} - {lesson_name}"],
         n_results=3
     )
     textbook_context = "".join(textbook_results['documents'][0][0])
@@ -48,17 +53,17 @@ def get_or_generate_lesson(module_name, lesson_name, email):
     # image_context = "\n".join(image_info)
 
     template = """
-    You are an expert in Machine Learning, tasked with teaching concepts from the book "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron. 
+    You are an expert in Machine Learning, tasked with teaching concepts from the book "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron.
     Use the following context to create a comprehensive and engaging lesson:
 
     Module Context: {module_context}
     Textbook Context: {textbook_context}
-
     Module: {module_name}
     Lesson: {lesson_name}
+    {subtopics_section}
 
     Instructions:
-    Please provide a thorough and in-depth explanation of the lesson topic, including:
+    Please provide a thorough and in-depth explanation of the lesson topic, {subtopics_instruction} including:
 
     1. Key concepts and their definitions:
     - Explain each concept in detail, using analogies and real-world examples to enhance understanding
@@ -94,7 +99,34 @@ def get_or_generate_lesson(module_name, lesson_name, email):
     8. Ethical considerations:
     - Discuss any ethical implications or considerations related to the use of these machine learning techniques
 
+    {subtopics_coverage}
+
     Ensure the information is clear, accurate, and actionable for someone learning machine learning. Use a mix of text, bullet points, and code blocks to present the information in an easily digestible format. Encourage critical thinking and provide opportunities for students to reflect on the material.
+    """
+    subtopics_section_with_topics = """
+    Lesson Subtopics:
+    {subtopics_list}
+    """
+
+    subtopics_instruction_with_topics = "covering all the listed subtopics,"
+
+    subtopics_coverage_with_topics = """
+    For each of the listed subtopics, ensure that you:
+    - Provide a clear and concise definition or explanation
+    - Explain its importance in the context of the overall lesson and module
+    - If applicable, provide examples or use cases specific to that subtopic
+    - Highlight any connections to other concepts within the module or in machine learning in general
+    """
+
+    subtopics_instruction_without_topics = ""
+
+    subtopics_coverage_without_topics = """
+    In your explanation, make sure to:
+    - Identify and explain the main concepts related to this lesson
+    - Provide clear and concise definitions for key terms
+    - Explain the importance of these concepts in the context of the overall lesson and module
+    - Provide relevant examples or use cases to illustrate the concepts
+    - Highlight connections between these concepts and other topics within the module or in machine learning in general
     """
     quiz_template = """
         Based on the following lesson content, generate a quiz with 5 multiple-choice questions.
@@ -114,63 +146,76 @@ def get_or_generate_lesson(module_name, lesson_name, email):
             }}
         ]
     """
+   
     # prompt = PromptTemplate(
     #     input_variables=["module_context", "textbook_context", "image_context", "module_name", "lesson_name"],
     #     template=template,
     # )
 
-    prompt = PromptTemplate(
-        input_variables=["module_context", "textbook_context", "module_name", "lesson_name"],
-        template=template,
+    if 'subtopics' in lesson_context:
+        subtopics_list = "\n".join(f"- {topic}" for topic in lesson_context['subtopics'])
+        subtopics_section = subtopics_section_with_topics.format(subtopics_list=subtopics_list)
+        subtopics_instruction = subtopics_instruction_with_topics
+        subtopics_coverage = subtopics_coverage_with_topics
+        
+    else:
+        subtopics_section = ""
+        subtopics_instruction = subtopics_instruction_without_topics
+        subtopics_coverage = subtopics_coverage_without_topics
+
+    formatted_template = template.format(
+        module_context=module_context,
+        textbook_context=textbook_context,
+        module_name=module['module_name'],
+        lesson_name=lesson_name,
+        subtopics_section=subtopics_section,
+        subtopics_instruction=subtopics_instruction,
+        subtopics_coverage=subtopics_coverage
     )
+
+    prompt = PromptTemplate(
+        input_variables=["module_context", "textbook_context", "module_name",
+                        "lesson_name","subtopics_section", "subtopics_instruction", "subtopics_coverage"],
+        template=formatted_template,
+    )
+
     quiz_prompt = PromptTemplate(
         input_variables=["lesson_content"],
         template=quiz_template,
     )
     try:
-        # Initialize the GoogleGenerativeAI model with required parameters
-        get_gen_lesson = get_generated_lesson(module_name, lesson_name,email)
-        get_gen_quiz = get_generated_quiz(module_name, lesson_name)
-        if(lesson_name == 'Exercises'):
-            return
-        if(get_gen_lesson['metadatas']):
-            lesson_content = get_gen_lesson['documents'][0]
-            # print(get_gen_quiz)
-            return lesson_content, get_gen_quiz
+        print('in lllm')
+        llm = GoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.7, google_api_key=api_key)
+        chain = prompt | llm | StrOutputParser()
+        
+        # input_data = {
+        # "textbook_context": textbook_context,
+        # "module_name": module_name,
+        # "lesson_name": lesson_name,
+        # "module_context": module_context,
+        # "image_context": image_context
+        # }
+        
+        input_data = {
+        "textbook_context": textbook_context,
+        "module_name": module['module_name'],
+        "lesson_name": lesson_name,
+        "module_context": module_context
+        }
+        # print('is there a problem++++++++++ again', input_data)
+        response_lesson_content = chain.invoke(input=input_data)
+        # print(response_lesson_content)
+        quiz_input_data = {
+            "lesson_content": response_lesson_content
+        }
+        quiz_chain = quiz_prompt | llm | StrOutputParser()
+        quiz_content = quiz_chain.invoke(input=quiz_input_data)
+        print(quiz_content, type(quiz_content))
+        quiz_json = json.loads(quiz_content) 
             
-        else:
-            print('in lllm')
-            llm = GoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.7, google_api_key=api_key)
-            chain = prompt | llm | StrOutputParser()
-            
-            # input_data = {
-            # "textbook_context": textbook_context,
-            # "module_name": module_name,
-            # "lesson_name": lesson_name,
-            # "module_context": module_context,
-            # "image_context": image_context
-            # }
-            
-            input_data = {
-            "textbook_context": textbook_context,
-            "module_name": module_name,
-            "lesson_name": lesson_name,
-            "module_context": module_context
-            }
-            # print('is there a problem++++++++++ again', input_data)
-            response_lesson_content = chain.invoke(input=input_data)
-            # print(response_lesson_content)
-            quiz_input_data = {
-                "lesson_content": response_lesson_content
-            }
-            quiz_chain = quiz_prompt | llm | StrOutputParser()
-            quiz_content = quiz_chain.invoke(input=quiz_input_data)
-            print(quiz_content, type(quiz_content))
-            quiz_json = json.loads(quiz_content) 
-             
-            store_generated_lesson(module_name, lesson_name, response_lesson_content, email)
-            store_generated_quiz(module_name, lesson_name, quiz_content)
-            return response_lesson_content, quiz_json
+        store_generated_lesson(module['module_name'], lesson_name, response_lesson_content, email)
+        store_generated_quiz(module['module_name'], lesson_name, quiz_content)
+        return response_lesson_content, quiz_json
 
     except Exception as e:
         print(f"Error occurred: {e}")

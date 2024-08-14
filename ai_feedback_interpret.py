@@ -1,4 +1,4 @@
-from config import get_module_by_name, get_module_exercise, reset_lesson_status, update_module_progress, update_module_status
+from new_config import get_module_by_name, get_module_exercise, reset_lesson_status, update_module_status, update_module_status
 
 from langchain_google_genai import GoogleGenerativeAI
 api_key = 'AIzaSyDjs6-jQNsmYFcqK54Mk5zsPDIBwJlk29E'
@@ -35,7 +35,7 @@ def apply_feedback(module_name):
     if needs_review:
         # Reset module status to require review
         update_module_status(module_name, 0)
-        update_module_progress(module_name, 0)
+        update_module_status(module_name, 0)
         reset_lesson_status(module_number,0)
 
     return needs_review

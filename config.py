@@ -435,19 +435,19 @@ def store_module_exercise(module_name, new_result):
 # Initialization code
 pdf_path = '/Users/adityakoul/Documents/ml kb/Text Book/Hands-On Machine Learning.pdf'
 
-if modules_collection.count() == 0:
-    print('creating json data')
-    load_data_to_chroma()
+# if modules_collection.count() == 0:
+#     print('creating json data')
+#     load_data_to_chroma()
 
 if textbook_collection.count() == 0:
     print('creating textbook data')
     load_textbook_to_chroma(pdf_path)
 
-if module_exercises_collection.count() == 0:
-    print('creating module exercise data')
-    load_module_exercises()
+# if module_exercises_collection.count() == 0:
+#     print('creating module exercise data')
+#     load_module_exercises()
 
 if __name__ == "__main__":
     print('from config file')
-    modules = get_modules()
+    modules = textbook_collection.get()
     print(f"Retrieved {len(modules)} modules")

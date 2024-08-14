@@ -5,9 +5,9 @@ from lesson_generator import display_lesson_with_images, get_or_generate_lesson
 from chat_bot_dialog import chat_bot
 from quiz_dialog import quiz
 from module_exercise import exercise_form
-import logging
+# import logging
 import json
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 custom_css = """
 <style>
@@ -119,9 +119,9 @@ custom_css = """
         margin: 0 5px;
     }
 
-    .st-c2 {
-        background-color: #007d69 !important;
-    }
+    # .st-c2 {
+    #     background-color: #007d69 !important;
+    # }
 
     .feedback-notification {
         background-color: #f0f8ff;
@@ -196,6 +196,7 @@ def navigation():
     # return False
 
 def calculate_progress(module):
+   
     completed_lessons = sum(1 for lesson in module['lessons'] if lesson['status'] == 1)
     total_lessons = len(module['lessons'])
     return completed_lessons / total_lessons
@@ -203,6 +204,8 @@ def calculate_progress(module):
 def refresh():
     student_details = get_student_details(st.session_state.email)
     st.session_state.student_details = student_details
+    st.session_state.current_module = next((module for module in json.loads(student_details['modules']) 
+                                            if module['module_name'] == st.session_state.current_module['module_name']), None)
 
 
 def app():
@@ -210,8 +213,7 @@ def app():
     try:
         module = st.session_state.current_module
         student_details = st.session_state.student_details
-        progress = calculate_progress(module)
-
+        progress = module['progress']
         # update_module_status(module,student_details['email'])
 
         st.set_page_config(page_title="Tutor AI", layout="wide")
@@ -219,7 +221,7 @@ def app():
         st.markdown(custom_css, unsafe_allow_html=True)
         
         # Header
-        st.markdown('<div class="header"><span class="logo-title"> 🛡️ Tutor AI </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
+        st.markdown('<div class="header"><span class="logo-title"> 🛡️ AIML Tutor </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
 
         # Main content
         if 'current_module' not in st.session_state:
@@ -245,13 +247,12 @@ def app():
         st.progress(progress)
         st.write(f"Module Progress: {progress*100:.0f}%")
 
-        lessons = module['lessons']
         col1, col2 = st.columns([1, 2])
         
         with col1:
             st.markdown("<h3>Lessons List</h3>", unsafe_allow_html=True)
         
-            for idx, lesson in enumerate(lessons):
+            for idx, lesson in enumerate(module['lessons']):
                 st.markdown(f"""
                 <div class="module">
                     <h3>{lesson['name']}</h3>
@@ -269,7 +270,6 @@ def app():
                     print('IN Exercises +++++++++++++ EXERCISEDSSSS ')
                     res = get_module_exercise(module['module_name'])
                     exercise_context = next((lesson for lesson in module['lessons'] if lesson["name"] == 'Exercises'), None)
-                    print(exercise_context)
                     ex_exists_ = 'results' in exercise_context
                     mex_ = exercise_context['sub_topics']
                     
@@ -301,7 +301,6 @@ def app():
                             
                             if submit_button:
                                 store_module_exercise(responses,student_details['email'])
-                                print(responses)
                                 st.success("Thanks for your responses!")
                                 update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
                                 if check_module_completion(module['module_number'],student_details['email']):
@@ -310,8 +309,7 @@ def app():
                 else:
                     if st.session_state.get('generate_content', False):
                         with st.spinner('Generating lesson content...'):
-                            lesson_content, quiz_content = get_or_generate_lesson(module['module_name'], st.session_state.current_lesson['name'],student_details['email'])
-                             
+                            lesson_content, quiz_content = get_or_generate_lesson(module, st.session_state.current_lesson['name'],student_details['email'])
                             # pdf_path = '/Users/adityakoul/Documents/ml kb/Text Book/Hands-On Machine Learning.pdf'
                             # display_lesson_with_images(lesson_content, pdf_path)
                             st.session_state.current_lesson['content'] = lesson_content
@@ -329,19 +327,15 @@ def app():
                     """, unsafe_allow_html=True)
                     col_complete, col_qa, col_quiz = st.columns(3)
                     with col_complete:
-                        if st.button("Mark as Complete",key="mark_complete_in_col"):
+                        if st.button("Mark as Complete", key="mark_complete_in_col"):
                             if 'quiz_submitted' in st.session_state:
                                 if st.session_state.quiz_submitted == True:
                                     update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
-                                    st.toast('Hooray! Lesson completed!!', icon='🎉')
+                                    st.success('Hooray! Lesson completed!!', icon="🎉")
                                     # del st.session_state.quiz_submitted
                                     print('LESSON COMPLETED')
-                                    refresh()
-                                    student_details = st.session_state.student_details
-                                    student_progress = student_details.get('progress', {})
-                                    progress = calculate_progress(module, student_progress)
-                                    print(progress)
                                     st.success("Lesson marked as complete!")
+                                    refresh()
                                     st.rerun()
                             else:
                                 print('Please pass quiz to complete.')
@@ -354,10 +348,18 @@ def app():
                     with col_qa:
                         if st.button("Open Q&A Chat",key="open_dialog"):
                             # st.session_state.qa_chat_open = True
+                            if 'messages' in st.session_state:
+                                del st.session_state.messages
                             chat_bot()
 
                     with col_quiz:
                         if st.button("Quiz",key="open_quiz_dialog"):
+                            if 'quiz_score' in st.session_state:
+                                del st.session_state.quiz_score
+                            if 'quiz_submitted' in st.session_state:
+                                del st.session_state.quiz_submitted
+                            if 'user_answers' in st.session_state:
+                                del st.session_state.user_answers
                             quiz()
 
                 # if st.button("Mark as Complete",key="mark_complete_outside"):
@@ -366,5 +368,8 @@ def app():
                 st.info("Select a lesson to view its content")
 
     except Exception as e:
-        logging.error(f"Error in lesson app: {str(e)}")
+        print(f"Error in lesson app: {str(e)}")
+        # logging.error(f"Error in lesson app: {str(e)}")
         st.error("An error occurred while loading the lesson. Please try again later.")
+
+

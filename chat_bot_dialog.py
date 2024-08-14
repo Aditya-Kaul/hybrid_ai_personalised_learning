@@ -1,5 +1,5 @@
 import streamlit as st
-from QnA import transform
+from QnA_gemini import transform
 
 
 @st.experimental_dialog("💬 AI Chatbot")

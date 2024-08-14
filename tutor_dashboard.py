@@ -1,8 +1,7 @@
 import streamlit as st
-from config import get_modules, get_module_exercise, update_module_feedback
+from new_config import get_modules, get_module_exercise, update_module_feedback, students_collection
 import random
 import json
-
 
 custom_css = """
 <style>
@@ -33,8 +32,51 @@ def navigation():
                 del st.session_state[key]
             st.rerun()
 
+def get_student_data():
+    return students_collection.get()['metadatas']
+
+def display_student_profile(student):
+    st.subheader(f"Student Profile: {student['name']}")
+    st.write(f"Email: {student['email']}")
+    st.write(f"Enrolled: {student['enrolled']}")
+    st.write(f"Overall Progress: {student['progress']}%")
+    st.progress(student['progress'] / 100)
+
+    # Here you can add the existing implementation for displaying modules, exercises, etc.
+    modules = get_modules()
+    completed_modules = sum(1 for module in modules if module['status'] == 1)
+    total_modules = len(modules)
+
+    with st.expander("Module Progress"):
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Number of Modules", total_modules)
+        col2.metric("Modules Completed", completed_modules)
+        col3.metric("Modules Remaining", total_modules - completed_modules)
+
+    st.subheader("Exercises Submitted")
+    for module in modules:
+        if module['status'] == 1:
+            ex = get_module_exercise(module_name=module['module_name'])
+            with st.expander(module['module_name']):
+                st.write(f"Submission date: {random.randint(1, 28)}/{random.randint(1, 12)}/2024")
+                st.write(f"Score: {random.randint(70, 100)}%")
+                
+                st.subheader("Questions and Answers")
+                for idx, (question, answer) in enumerate(json.loads(ex['metadatas'][0]["results"]).items()):
+                    st.write(f"Q{idx+1}: {question}")
+                    st.text_area(f"Answer {idx+1}", value=answer, key=f"{module['module_name']}_{idx}", disabled=True)
+                
+                with st.form(f"feedback_form_{module['module_name']}"):
+                    feedback = st.text_area(f"Provide feedback for {module['module_name']}")
+                    submit = st.form_submit_button("Submit Feedback")
+                    if submit:
+                        update_module_feedback(module['module_name'], feedback)
+                        st.success("Feedback submitted successfully!")
+
+
 def app():
     # Sample data (replace with your actual data)
+    print(get_student_data())
     st.markdown(custom_css, unsafe_allow_html=True)
     modules = get_modules()
     completed_modules = 0

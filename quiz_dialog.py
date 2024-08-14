@@ -1,10 +1,11 @@
 import streamlit as st
 import json
-import logging
-logging.basicConfig(level=logging.DEBUG)
+# import logging
+# logging.basicConfig(level=logging.DEBUG)
 
 @st.experimental_dialog(f"Quiz")
 def quiz():
+    print('prblem')
     if 'quiz_questions' not in st.session_state:
         st.error("No quiz questions available. Please go back to the lesson and regenerate the content.")
         return

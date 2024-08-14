@@ -1,0 +1,337 @@
+[   
+    {
+    "module_name": "The Machine Learning Landscape",
+    "module_number": 1,
+    "lessons": [
+        { "name": "What Is Machine Learning?", "status": 0 },
+        { "name": "Why Use Machine Learning?", "status": 0 },
+        {
+        "name": "Types of Machine Learning Systems",
+        "status": 0,
+        "sub_topics": [
+            "Supervised/Unsupervised Learning",
+            "Batch and Online Learning",
+            "Instance-Based Versus Model-Based Learning"
+        ]
+        },
+        {
+        "name": "Main Challenges of Machine Learning",
+        "status": 0,
+        "sub_topics": [
+            "Insufficient Quantity of Training Data",
+            "Nonrepresentative Training Data",
+            "Poor-Quality Data",
+            "Irrelevant Features",
+            "Overfitting the Training Data",
+            "Underfitting the Training Data",
+            "Stepping back"
+        ]
+        },
+        {
+        "name": "Testing and Validating",
+        "status": 0,
+        "sub_topics": [
+            "Hyperparameter Tuning and Model Selection",
+            "Data Mismatch"
+        ]
+        },
+        { "name": "Exercises", "status": 0, "sub_topics": [
+            "How would you define Machine Learning?",
+            "Can you name four types of problems where ML shines?",
+            "What is a labeled training set?",
+            "What are the two most common supervised tasks?",
+            "Can you name four of the main challenges in Machine Learning?",
+            "What is out-of-core learning?",
+            " If your model performs great on the training data but generalizes poorly to new instances, what is happening? Can you name three possible solutions?",
+            "What is a test set, and why would you want to use it?",
+            "What is the train-dev set, when do you need it, and how do you use it?",
+            "What can go wrong if you tune hyperparameters using the test set?"
+          ], "results":{}, "tutor_feedback": "" }
+    ],
+    "description": "This module introduces the basics of machine learning, exploring different types, including supervised and unsupervised learning. It discusses the challenges of ML, such as overfitting and underfitting, and the importance of having a well-representative training set for successful model generalization.",
+    "status": 0,
+    "progress": 0
+
+    },
+    {
+        "module_name": "Classification",
+        "module_number": 2,
+        "lessons": [
+            {"name": "MNIST", "status": 0,"sub_topics": []},
+            {"name": "Training a Binary Classifier", "status": 0,"sub_topics": []},
+            {"name": "Performance Measures", "status": 0,
+                    "sub_topics": [
+                        "Confusion Matrix",
+                        "Precision and Recall",
+                        "Precision/Recall Tradeoff",
+                        "The ROC Curve"
+                    ]},
+            {"name": "Multiclass Classification", "status": 0,"sub_topics": []},
+            {"name": "Error Analysis", "status": 0,"sub_topics": []},
+            {"name": "Multilabel Classification", "status": 0,"sub_topics": []},
+            {"name": "Multioutput Classification", "status": 0,"sub_topics": []},
+            {"name": "Exercises", "status": 0, "sub_topics": [
+                "Try to build a classifier for the MNIST dataset that achieves over 97% accuracy on the test set. Hint: the KNeighborsClassifiers works quite well for this task; you just need to find good hyperparameter values (try a grid search on the weights and n_neighbors hyperparameter)",
+                "Write a function that can shift an MNIST image in any direction (left, right, up, or down) by one pixel.5 Then, for each image in the training set, create four shifted copies (one per direction) and add them to the training set. Finally, train your best model on this expanded training set and measure its accuracy on the test set. You should observe that your model performs even better now! This technique of artificially growing the training set is called data augmentation or training set expansion.",
+                "Explore precision-recall tradeoff for a trained model.",
+                "Experiment with different classifiers and compare their ROC curves.",
+                "Train and fine-tune a decision tree for the MNIST dataset."
+              ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This module delves into methods for categorizing objects or data. It primarily focuses on binary classifiers, performance measures like precision and recall, and handling more complex scenarios through techniques like multiclass and multilabel classification.",
+        "status": 0,
+        "progress": 0
+    },
+    {
+        "module_name": "Training Models",
+        "module_number": 3,
+        "lessons": [
+            {"name": "Linear Regression", "status": 0,"sub_topics": ["The Normal Equation"]},
+            {"name": "Gradient Descent", "status": 0,
+                    "sub_topics": [
+                        "Batch Gradient Descent",
+                        "Stochastic Gradient Descent",
+                        "Mini-batch Gradient Descent"
+                    ]},
+            {"name": "Polynomial Regression", "status": 0,"sub_topics": []},
+            {"name": "Learning Curves", "status": 0,"sub_topics": []},
+            {"name": "Regularized Linear Models", "status": 0,
+                    "sub_topics": [
+                        "Ridge Regression",
+                        "Lasso Regression",
+                        "Early Stopping",
+                        "Elastic Net"
+                    ]},
+            {"name": "Logistic Regression", "status": 0,
+                    "sub_topics": [
+                        "Estimating Probabilities",
+                        "Training and Cost Function",
+                        "Decision Boundaries",
+                        "Softmax Regression"
+                    ]},
+            {"name": "Exercises", "status": 0,"sub_topics":[
+                "Which Linear Regression training algorithm can you use if you have a training set with millions of features?",
+                "Suppose the features in your training set have very different scales. Which algorithms might suffer from this, and how? What can you do about it?",
+                "Can Gradient Descent get stuck in a local minimum when training a Logistic Regression model?",
+                "Suppose you use Batch Gradient Descent and you plot the validation error at every epoch. If you notice that the validation error consistently goes up, what is likely going on? How can you fix this?",
+                "Suppose you are using Polynomial Regression. You plot the learning curves and you notice that there is a large gap between the training error and the validation error. What is happening? What are three ways to solve this?",
+                "Suppose you want to classify pictures as outdoor/indoor and daytime/nighttime. Should you implement two Logistic Regression classifiers or one Softmax Regression classifier?",
+                "Implement Batch Gradient Descent with early stopping for Softmax Regression (without using Scikit-Learn)."
+              ],"results":{}, "tutor_feedback": "" }
+        ],
+        "description":"The modules overs the fundamentals of training machine learning models, focusing on different algorithms like Linear Regression, Logistic Regression, and various types of Gradient Descent. It provides an in-depth look at how models learn from data, adjust their parameters, and the intricacies of regularization to prevent overfitting.",
+        "status": 0,
+        "progress": 0
+    },
+    {
+        "module_name": "Support Vector Machines",
+        "module_number": 4,
+        "lessons": [
+            {"name": "Linear SVM Classification", "status": 0,
+                    "sub_topics": [
+                        "Soft Margin Classification"
+                    ]},
+            {"name": "Nonlinear SVM Classification", "status": 0,
+                    "sub_topics": [
+                        "Polynomial Kernel",
+                        "Adding Similarity Features",
+                        "Gaussian RBF Kernel",
+                        "Computational Complexity"
+                    ]},
+            {"name": "SVM Regression", "status": 0, "sub_topics": []},
+            {"name": "Under the Hood", "status": 0, 
+                    "sub_topics": [
+                        "Decision Function and Predictions",
+                        "Training the SVM Classifier",
+                        "Quadratic Programming",
+                        "The Dual Problem",
+                        "Kernelized SVM",
+                        "Online SVMs",
+                        "Hinge Loss"
+                    ]},
+            { "name": "Exercises", "status": 0,"sub_topics": [
+                "What is the fundamental idea behind Support Vector Machines",
+                "What is a support vector?",
+                "Why is it important to scale the inputs when using SVMs?",
+                "Can an SVM classifier output a confidence score when it classifies an instance? What about a probability?",
+                "Train an SVM classifier on the MNIST dataset. Since SVM classifiers are binary classifiers, you will need to use one-versus-the-rest to classify all 10 digits. You may want to tune the hyperparameters using small validation sets to speed up the process. What accuracy can you reach?",
+                "Train an SVM regressor on the California housing dataset."
+              ],"results":{}, "tutor_feedback": "" }
+        ],
+        "description":"This module explores SVMs, a powerful set of supervised learning methods used for classification, regression, and outlier detection. It explains how SVMs can efficiently perform linear classification and introduces the kernel trick for handling nonlinear scenarios, making SVMs versatile for various complex datasets.",
+        "status": 0,
+        "progress": 0
+    },
+    {
+        "module_name": "Decision Trees",
+        "module_number": 5,
+        "lessons": [
+            {"name": "Training and Visualizing a Decision Tree", "status": 0,"sub_topics": []},
+            {"name": "Making Predictions", "status": 0,"sub_topics": []},
+            {"name": "Estimating Class Probabilities", "status": 0,"sub_topics": []},
+            {"name": "The CART Training Algorithm", "status": 0,"sub_topics": []},
+            {"name": "Computational Complexity", "status": 0,"sub_topics": []},
+            {"name": "Gini Impurity or Entropy?", "status": 0,"sub_topics": []},
+            {"name": "Regularization Hyperparameters", "status": 0,"sub_topics": []},
+            {"name": "Regression", "status": 0,"sub_topics": []},
+            {"name": "Instability", "status": 0,"sub_topics": []},
+            {"name": "Exercises", "status": 0,"sub_topics": [
+                "What is the approximate depth of a Decision Tree trained (without restrictions) on a training set with one million instances?",
+                "Is a node’s Gini impurity generally lower or greater than its parent’s? Is it generally lower/greater, or always lower/greater?",
+                "If a Decision Tree is underfitting the training set, is it a good idea to try scaling the input features?",
+                "How do I train and fine-tune a Decision Tree for the moons dataset?\n            \n            1. Use `sklearn.datasets.make_moons` to generate a moons dataset.\n            2. Use `sklearn.model_selection.train_test_split` to split the dataset into a training set and a test set.\n            3. Use grid search with cross-validation (with the help of `sklearn.model_selection.GridSearchCV`) to find good hyperparameter values for a `DecisionTreeClassifier`. Hint: try various values for `max_depth`, `min_samples_split`, etc.\n            4. Train it on the full training set using these hyperparameters, and measure your model’s performance on the test set. You should get roughly 85% to 87% accuracy.\n            "
+              ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This module discusses how to use decision trees for both classification and regression tasks. It outlines how trees can be trained, visualized, and used for making predictions, highlighting their intuitive nature and versatility. The chapter also covers techniques to control overfitting through parameters and the concept of using trees in ensemble methods like Random Forests.",
+        "status": 0,
+        "progress": 0
+    },
+    {
+        "module_name": "Ensemble Learning and Random Forests",
+        "module_number": 6,
+        "lessons": [
+            {"name": "Voting Classifiers", "status": 0,"sub_topics": []},
+            {"name": "Bagging and Pasting", "status": 0,"sub_topics": ["Bagging and Pasting","Out-of-bag Evaluation"]},
+            {"name": "Random Patches and Random Subspaces", "status": 0, "sub_topics": []},
+            {"name": "Random Forests", "status": 0, "sub_topics": ["Extra-Trees","Feature Importance"]},
+            {"name": "Boosting", "status": 0, "sub_topics": ["AdaBoost", "Gradient Boosting"]},
+            {"name": "Stacking", "status": 0,"sub_topics": []},
+            {"name": "Exercises", "status": 0, "sub_topics": [
+                "If you have trained five different models on the exact same training data, and they all achieve 95% precision, is there any chance that you can combine these models to get better results? If so, how? If not, why?",
+                "What is the difference between hard and soft voting classifiers?",
+                "Is it possible to speed up training of a bagging ensemble by distributing it across multiple servers? What about pasting ensembles, boosting ensembles, Random Forests, or stacking ensembles?",
+                "What is the benefit of out-of-bag evaluation?",
+                "If your AdaBoost ensemble underfits the training data, which hyperparameters should you tweak and how?",
+                "If your Gradient Boosting ensemble overfits the training set, should you increase or decrease the learning rate?",
+                "Load the MNIST data (introduced in Chapter 3), and split it into a training set, a validation set, and a test set (e.g., use 50,000 instances for training, 10,000 for validation, and 10,000 for testing). Then train various classifiers, such as a Random Forest classifier, an Extra-Trees classifier, and an SVM classifier. Next, try to combine them into an ensemble that outperforms each individual classifier on the validation set, using soft or hard voting. Once you have found one, try it on the test set. How much better does it perform compared to the individual classifiers?"
+              ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This module explores strategies for improving machine learning predictions by combining multiple models. It details methods like bagging, boosting, and stacking, with a focus on Random Forests—a robust ensemble technique that improves decision trees' performance by averaging multiple trees' predictions to reduce overfitting and enhance generalization.",
+        "status": 0,
+        "progress": 0
+    },
+    {
+        "module_name": "Dimensionality Reduction",
+        "module_number": 7,
+        "lessons": [
+            {"name": "The Curse of Dimensionality", "status": 0, "sub_topics": []},
+            {"name": "Main Approaches for Dimensionality Reduction", "status": 0,
+                    "sub_topics": ["Projection", "Manifold Learning"]},
+            {"name": "PCA", "status": 0, 
+                    "sub_topics":[
+                        "Preserving Variance",
+                        "Principal Components",
+                        "Projecting Down to d Dimensions",
+                        "Using Scikit-Learn",
+                        "Explained Variance Ratio",
+                        "Choosing the Right Number of Dimensions",
+                        "PCA for Compression",
+                        "Randomized PCA",
+                        "Incremental PCA"
+                    ]
+            },
+            {"name": "Kernel PCA", "status": 0, "sub_topics":["Selecting a Kernel and Tuning Hyperparameters"]},
+            {"name": "LLE", "status": 0,"sub_topics":[]},
+            {"name": "Other Dimensionality Reduction Techniques: MDS, Isomap, and t-SNE, LDA", "status": 0,"sub_topics":[]},
+            {"name": "Exercises", "status": 0,"sub_topics":[
+                "What are the main motivations for reducing a dataset’s dimensionality? What are the main drawbacks?",
+                "What is the curse of dimensionality?",
+                "Once a dataset’s dimensionality has been reduced, is it possible to reverse the operation? If so, how? If not, why?",
+                "Can PCA be used to reduce the dimensionality of a highly nonlinear dataset?",
+                "Suppose you perform PCA on a 1,000-dimensional dataset, setting the explained variance ratio to 95%. How many dimensions will the resulting dataset have?",
+                "Use t-SNE to reduce the MNIST dataset down to two dimensions and plot the result using Matplotlib. You can use a scatterplot using 10 different colors to represent each image’s target class. Alternatively, you can replace each dot in the scatterplot with the corresponding instance’s class (a digit from 0 to 9), or even plot scaled-down versions of the digit images themselves (if you plot all digits, the visualization will be too cluttered, so you should either draw a random sample or plot an instance only if no other instance has already been plotted at a close distance). You should get a nice visualization with well-separated clusters of digits. Try using other dimensionality reduction algorithms such as PCA, LLE, or MDS and compare the resulting visualizations."
+              ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This module addresses techniques to simplify complex datasets while preserving their essential characteristics. It explains Principal Component Analysis (PCA), Kernel PCA, and Linear Discriminant Analysis (LDA) among other methods, illustrating how reducing the number of variables can improve model efficiency and performance on high-dimensional data.",
+        "status": 0,
+        "progress": 0
+    },    
+    {
+        "module_name": "Unsupervised Learning Techniques",
+        "module_number": 8,
+        "lessons": [
+            {"name": "Clustering", "status": 0, 
+                    "sub_topics":[
+                        "K-Means",
+                        "Limits of K-Means",
+                        "Using Clustering for Image Segmentation",
+                        "Using Clustering for Preprocessing",
+                        "Using Clustering for Semi-Supervised Learning",
+                        "DBSCAN"]},
+            {"name": "Gaussian Mixtures", "status": 0, 
+                    "sub_topics":[
+                        "Anomaly Detection Using Gaussian Mixtures",
+                        "LIKELIHOOD FUNCTION",
+                        "Bayesian Gaussian Mixture Models"
+                    ]},
+            {"name": "Other Algorithms for Anomaly and Novelty Detection", "status": 0, 
+                    "sub_topics":[
+                        "One-class SVM",
+                        "Fast-MCD (minimum covariance determinant)",
+                        "Isolation Forest",
+                        "Local Outlier Factor (LOF)"
+                    ]},
+            {"name": "Exercises", "status": 0, "sub_topics": [
+                "How would you define clustering? Can you name a few clustering algorithms?",
+                "What are some of the main applications of clustering algorithms?",
+                "Describe two techniques to select the right number of clusters when using K-Means.",
+                "What is label propagation? Why would you implement it, and how?",
+                "Can you name two clustering algorithms that can scale to large datasets? And two that look for regions of high density?",
+                "What is a Gaussian mixture? What tasks can you use it for?",
+                "Train a Gaussian mixture model on the Olivetti faces dataset. To speed up the algorithm, you should probably reduce the dataset’s dimensionality (e.g., use PCA, preserving 99% of the variance). Use the model to generate some new faces (using the method)and visualize them (if you used PCA, you will need to use its inverse_transform() method). Try to modify some images (e.g., rotate, flip, darken) and see if the model can detect the anomalies (i.e., compare the output of the score_samples() method for normal images and for anomalies)."
+              ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This module covers methods for analyzing data without pre-labeled responses, focusing on clustering, visualization, and dimensionality reduction. It introduces algorithms like K-Means, DBSCAN, and hierarchical clustering, along with methods for anomaly detection and association rule learning, showcasing their utility in discovering hidden patterns in data.",
+        "status": 0,
+        "progress": 0
+    },
+    {
+        "module_name": "Introduction to Artificial Neural Networks with Keras",
+        "module_number": 9,
+        "lessons": [
+            {"name": "Introduction to ANNs", "status": 0, "sub_topics":[]},
+            {"name": "Installing TensorFlow 2", "status": 0, "sub_topics":[]},
+            {"name": "Building an Image Classifier Using the Sequential API", "status": 0, "sub_topics":[]},
+            {"name": "Compiling the Model", "status": 0,"sub_topics":[]},
+            {"name": "Training and Evaluating the Model", "status": 0,"sub_topics":[]},
+            {"name": "Using the Model to Make Predictions", "status": 0,"sub_topics":[]},
+            {"name": "Building Complex Models Using the Functional API", "status": 0,"sub_topics":[]},
+            {"name": "Saving and Restoring a Model", "status": 0,"sub_topics":[]},
+            {"name": "Using Callbacks", "status": 0,"sub_topics":[]},
+            {"name": "TensorBoard", "status": 0,"sub_topics":[]},
+            {"name": "Fine-Tuning Neural Network Hyperparameters", "status": 0,"sub_topics":[]},
+            {"name": "Transfer Learning", "status": 0,"sub_topics":[]},
+            {"name": "Exercises", "status": 0,"sub_topics":[
+                "Why was the logistic activation function a key ingredient in training the first MLPs?",
+                "Name three popular activation functions.",
+                "What is backpropagation and how does it work? What is the difference between backpropagation and reverse-mode autodiff?", 
+                "Can you list all the hyperparameters you can tweak in a basic MLP? If the MLP overfits the training data, how could you tweak these hyperparameters to try to solve the problem?"
+            ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This module provides a foundational understanding of neural networks, particularly focusing on implementations using the Keras library. It covers the basics of building, training, and evaluating neural networks for tasks like image and text recognition, emphasizing the ease of use and flexibility of Keras in simplifying complex neural network architectures.",
+        "status": 0,
+        "progress": 0
+    },{
+        "module_name": "End-to-End Machine Learning Project",
+        "module_number": 10,
+        "lessons": [
+            {"name": "Look at the big picture", "status": 0, "sub_topics": []},
+            {"name": "Get the data", "status": 0, "sub_topics": []},
+            {"name": "Discover and visualize the data to gain insights", "status": 0, "sub_topics": []},
+            {"name": "Prepare the data for Machine Learning algorithms", "status": 0, "sub_topics": []},
+            {"name": "Select a model and train it", "status": 0, "sub_topics": []},
+            {"name": "Fine-tune your model", "status": 0, "sub_topics": []},
+            {"name": "Present your solution", "status": 0, "sub_topics": []},
+            {"name": "Launch, monitor, and maintain your system", "status": 0, "sub_topics": [] },
+            {"name": "Exercises", "status": 0, "sub_topics": [
+                "Get a Housing Dataset from R. Kelley Pace and Ronald Barry, “Sparse Spatial Autoregressions,” Statistics & Probability. \n Try a Support Vector Machine regressor(sklearn.svm.SVR) with various hyperparameters, such as kernel='linear'(with various values for the C hyperparameter) or kernel = 'rbf' (with various values for the C and gamma hyperparameter ). Don’t worry about what these hyperparameter mean for now. How does the best predictor perform?",
+                "Try replacing GridSearchCV with RandomizedSearchCV",
+                "Try adding a transformer in the preparation pipeline to select only the most important attributes.",
+                " Try creating a single pipeline that does the full data preparation plus the final prediction."
+              ],"results":{}, "tutor_feedback": ""}
+        ],
+        "description":"This modules guides through a complete machine learning project, from data collection and analysis to model training and fine-tuning. It covers practical aspects like cleaning data, choosing and optimizing models, and validating results, providing a structured approach to developing robust ML solutions by applying the techniques in a real-world scenario.",
+        "status": 0,
+        "progress": 0
+    }   
+]

@@ -1,10 +1,10 @@
 import json
 import streamlit as st
 from ai_feedback_interpret import apply_feedback
-from config import get_module_exercise, get_modules, get_module_by_name, get_module_status, check_module_completion, get_student_details
-import logging
+from new_config import get_module_exercise, get_module_status, check_module_completion, get_student_details
+# import logging
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 custom_css = """ 
 <style>
@@ -132,6 +132,10 @@ custom_css = """
 </style>
 
 """
+def calculate_progress(module):
+    completed_lessons = sum(1 for lesson in module['lessons'] if lesson['status'] == 1)
+    total_lessons = len(module['lessons'])
+    return completed_lessons / total_lessons
 
 def navigation():
     col1, col2, col3, col4, col5 = st.columns(5)
@@ -176,22 +180,21 @@ def app():
     # logging.debug("Entering app function in home.py")
     try:
         # Set page config
+        student_details = get_student_details(st.session_state.email)
+        modules = json.loads(student_details['modules'])
         st.set_page_config(page_title="Tutor AI", layout="wide")
         st.markdown(custom_css, unsafe_allow_html=True)
         if 'email' not in st.session_state or st.session_state.user_type != 'student':
             st.warning("Please login as a student")
             st.session_state.page = 'login'
             st.rerun()
-        student_details = get_student_details(st.session_state.email)
         st.session_state.student_details = student_details
 
         st.title(f"Welcome, {student_details['name']}!")    
         navigation()
-        modules = get_modules()
-        student_progress = json.loads(student_details.get('progress', {}))
         # logging.debug(f"Home: Modules retrieved: {modules}")
         
-        show_feedback_notifications(modules)
+        # show_feedback_notifications(modules)
         # Header
         st.markdown('<div class="header"><span class="logo-title"> 🛡️ Tutor AI </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
         # exercise_data = get_module_exercise(module['module_name'])
@@ -213,15 +216,14 @@ def app():
         
         # print( student_progress.get('Classification', {}), 'some progress')
         for idx, module in enumerate(modules):
-            module_progress = student_progress.get(module['module_name'], {})
-            completed_lessons = sum(1 for status in module_progress.values() if status == 1)
-            total_lessons = len(module.get('lessons', []))
+            print(module)
+            module_progress = module['progress']
 
             with cols[idx % 3]:
                 module_number = idx + 1
                 module_status = get_module_status(module_number)
 
-                if module_status == 1 or (module_number == 1) or (module_number > 1 and check_module_completion(module_number - 1)):
+                if module_status == 1 or (module_number == 1) or (module_number > 1 and check_module_completion(module['module_name'],student_details['email'])):
                     status_text = "Unlocked"
                     button_disabled = False
                 else:
@@ -234,7 +236,7 @@ def app():
                     <div class="desc">{module['description']}</div>
                 </div>
                 """, unsafe_allow_html=True)
-                st.progress(completed_lessons / total_lessons if total_lessons > 0 else 0)
+                st.progress(module_progress)
                 if st.button(f"Start Module {module_number}", disabled=button_disabled):
                 # if st.button(f"Start Module {module_number}"):
                     st.session_state.current_module = module
@@ -243,5 +245,6 @@ def app():
                     # logging.debug(f"Session state after setting module: {st.session_state}")
                     st.rerun()
     except Exception as e:
-        logging.error(f"Error in home app: {str(e)}")
+        print(f"Error in home app: {str(e)}")
+        # logging.error(f"Error in home app: {str(e)}")
         st.error("An error occurred while loading the modules. Please try again later.")
