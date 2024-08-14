@@ -1,6 +1,6 @@
 import streamlit as st
 from ai_feedback_interpret import apply_feedback
-from config import get_module_exercise, get_student_details, update_lesson_status, check_module_completion, update_module_progress, update_module_status, store_module_exercise, update_student_progress
+from new_config import get_module_exercise, get_student_details, update_lesson_status, check_module_completion, update_module_status, store_module_exercise
 from lesson_generator import display_lesson_with_images, get_or_generate_lesson
 from chat_bot_dialog import chat_bot
 from quiz_dialog import quiz
@@ -195,18 +195,10 @@ def navigation():
     #     return True
     # return False
 
-def calculate_progress(module, student_progress):
-    # completed_lessons = sum(1 for lesson in module['lessons'] if lesson['status'] == 1)
-    # total_lessons = len(module['lessons'])
-    # return completed_lessons / total_lessons
-    progress = json.loads(student_progress)
-    module_progress = progress.get(module['module_name'], {})
-    completed_lessons = sum(1 for status in module_progress.values() if status == 1)
-    total_lessons = len(module.get('lessons', []))
-    if total_lessons > 0:
-        return completed_lessons / total_lessons 
-    else:
-        return 0
+def calculate_progress(module):
+    completed_lessons = sum(1 for lesson in module['lessons'] if lesson['status'] == 1)
+    total_lessons = len(module['lessons'])
+    return completed_lessons / total_lessons
     
 def refresh():
     student_details = get_student_details(st.session_state.email)
@@ -216,19 +208,23 @@ def refresh():
 def app():
     # logging.debug("Entering app function in lesson.py")
     try:
+        module = st.session_state.current_module
+        student_details = st.session_state.student_details
+        progress = calculate_progress(module)
+
+        # update_module_status(module,student_details['email'])
+
         st.set_page_config(page_title="Tutor AI", layout="wide")
         navigation()
         st.markdown(custom_css, unsafe_allow_html=True)
-
+        
         # Header
-        st.markdown('<div class="header"><span class="logo-title"> 🛡️ Tutor AI </span><span class="user-info">Aditya Koul</span></div>', unsafe_allow_html=True)
+        st.markdown('<div class="header"><span class="logo-title"> 🛡️ Tutor AI </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
 
         # Main content
         if 'current_module' not in st.session_state:
             st.warning("Please select a module from the home page.")
             return
-
-        module = st.session_state.current_module
 
         # exercise_data = get_module_exercise(module['module_name'])
         # has_new_feedback = 'tutor_feedback' in exercise_data['metadatas'][0] and not st.session_state.get('feedback_viewed', False)
@@ -246,11 +242,6 @@ def app():
         
         st.title(module['module_name'])
         st.write(f"{len(module['lessons'])} Lessons")
-        student_details = st.session_state.student_details
-        print(student_details.get('progress', {}))
-        student_progress = student_details.get('progress', {})
-        progress = calculate_progress(module, student_progress)
-        update_module_progress(module['module_number'],progress)
         st.progress(progress)
         st.write(f"Module Progress: {progress*100:.0f}%")
 
@@ -275,8 +266,13 @@ def app():
             st.markdown("<h3>Module Content</h3>", unsafe_allow_html=True)
             if 'current_lesson' in st.session_state:
                 if st.session_state.current_lesson['name'] == 'Exercises':
-                    print('IN Exercises+++++++++++++EXERCISEDSSSS')
+                    print('IN Exercises +++++++++++++ EXERCISEDSSSS ')
                     res = get_module_exercise(module['module_name'])
+                    exercise_context = next((lesson for lesson in module['lessons'] if lesson["name"] == 'Exercises'), None)
+                    print(exercise_context)
+                    ex_exists_ = 'results' in exercise_context
+                    mex_ = exercise_context['sub_topics']
+                    
                     ex_exists = 'results' in res['metadatas'][0]
                     mex = json.loads(res['metadatas'][0]['exercises'])
                     # exercise_form(mex)
@@ -290,11 +286,11 @@ def app():
                                 responses[question] = st.text_area(question,value=default_value, key=key)
                             submit_button = st.form_submit_button(label='Submit')
                             if submit_button:
-                                store_module_exercise(module['module_name'],responses)
+                                store_module_exercise(responses,student_details['email'])
                                 st.success("Thanks for your responses!")
-                                update_lesson_status(module['module_number'], st.session_state.current_lesson_index, 1)
-                                if check_module_completion(module['module_number']):
-                                    update_module_status(module['module_number'], 1)
+                                update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
+                                if check_module_completion(module['module_number'],student_details['email']):
+                                    update_module_status(student_details['email'],module['module_name'])
                                     st.success(f"Module {module['module_number']} completed! Next module unlocked.")
                     else:
                         with st.form(key='questions_form'):
@@ -304,12 +300,12 @@ def app():
                             submit_button = st.form_submit_button(label='Submit')
                             
                             if submit_button:
-                                store_module_exercise(module['module_name'],responses)
+                                store_module_exercise(responses,student_details['email'])
                                 print(responses)
                                 st.success("Thanks for your responses!")
-                                update_lesson_status(module['module_number'], st.session_state.current_lesson_index, 1)
-                                if check_module_completion(module['module_number']):
-                                    update_module_status(module['module_number'], 1)
+                                update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
+                                if check_module_completion(module['module_number'],student_details['email']):
+                                    update_module_status(student_details['email'],module['module_name'])
                                     st.success(f"Module {module['module_number']} completed! Next module unlocked.")
                 else:
                     if st.session_state.get('generate_content', False):
@@ -336,11 +332,10 @@ def app():
                         if st.button("Mark as Complete",key="mark_complete_in_col"):
                             if 'quiz_submitted' in st.session_state:
                                 if st.session_state.quiz_submitted == True:
-                                    update_lesson_status(module['module_number'], st.session_state.current_lesson_index, 1)
+                                    update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
                                     st.toast('Hooray! Lesson completed!!', icon='🎉')
                                     # del st.session_state.quiz_submitted
                                     print('LESSON COMPLETED')
-                                    update_student_progress(student_details['email'], module['module_name'], st.session_state.current_lesson['name'], 1)
                                     refresh()
                                     student_details = st.session_state.student_details
                                     student_progress = student_details.get('progress', {})
@@ -352,8 +347,8 @@ def app():
                                 print('Please pass quiz to complete.')
                                 st.error('Please pass quiz to complete.', icon="⚠️")
                                 # st.toast('Please pass quiz to complete.', icon="⚠️")
-                            if check_module_completion(module['module_number']):
-                                update_module_status(module['module_number'], 1)
+                            if check_module_completion(module['module_number'],student_details['email']):
+                                update_module_status(student_details['email'],module['module_name'])
                                 st.success(f"Module {module['module_number']} completed! Next module unlocked.")
                             
                     with col_qa:
