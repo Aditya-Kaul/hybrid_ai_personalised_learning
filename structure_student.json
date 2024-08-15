@@ -50,7 +50,13 @@
     ],
     "description": "This module introduces the basics of machine learning, exploring different types, including supervised and unsupervised learning. It discusses the challenges of ML, such as overfitting and underfitting, and the importance of having a well-representative training set for successful model generalization.",
     "status": 0,
-    "progress": 0
+    "progress": 0,
+    "student_metrics": {
+    "login_frequency": 0,
+    "time_on_platform": 0,
+    "recent_performances": [],
+    "overall_engagement_level": 0
+  }
 
     },
     {
@@ -80,7 +86,13 @@
         ],
         "description":"This module delves into methods for categorizing objects or data. It primarily focuses on binary classifiers, performance measures like precision and recall, and handling more complex scenarios through techniques like multiclass and multilabel classification.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },
     {
         "module_name": "Training Models",
@@ -121,7 +133,13 @@
         ],
         "description":"The modules overs the fundamentals of training machine learning models, focusing on different algorithms like Linear Regression, Logistic Regression, and various types of Gradient Descent. It provides an in-depth look at how models learn from data, adjust their parameters, and the intricacies of regularization to prevent overfitting.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },
     {
         "module_name": "Support Vector Machines",
@@ -160,7 +178,13 @@
         ],
         "description":"This module explores SVMs, a powerful set of supervised learning methods used for classification, regression, and outlier detection. It explains how SVMs can efficiently perform linear classification and introduces the kernel trick for handling nonlinear scenarios, making SVMs versatile for various complex datasets.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },
     {
         "module_name": "Decision Trees",
@@ -184,7 +208,13 @@
         ],
         "description":"This module discusses how to use decision trees for both classification and regression tasks. It outlines how trees can be trained, visualized, and used for making predictions, highlighting their intuitive nature and versatility. The chapter also covers techniques to control overfitting through parameters and the concept of using trees in ensemble methods like Random Forests.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },
     {
         "module_name": "Ensemble Learning and Random Forests",
@@ -208,7 +238,13 @@
         ],
         "description":"This module explores strategies for improving machine learning predictions by combining multiple models. It details methods like bagging, boosting, and stacking, with a focus on Random Forests—a robust ensemble technique that improves decision trees' performance by averaging multiple trees' predictions to reduce overfitting and enhance generalization.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },
     {
         "module_name": "Dimensionality Reduction",
@@ -244,7 +280,13 @@
         ],
         "description":"This module addresses techniques to simplify complex datasets while preserving their essential characteristics. It explains Principal Component Analysis (PCA), Kernel PCA, and Linear Discriminant Analysis (LDA) among other methods, illustrating how reducing the number of variables can improve model efficiency and performance on high-dimensional data.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },    
     {
         "module_name": "Unsupervised Learning Techniques",
@@ -283,7 +325,13 @@
         ],
         "description":"This module covers methods for analyzing data without pre-labeled responses, focusing on clustering, visualization, and dimensionality reduction. It introduces algorithms like K-Means, DBSCAN, and hierarchical clustering, along with methods for anomaly detection and association rule learning, showcasing their utility in discovering hidden patterns in data.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },
     {
         "module_name": "Introduction to Artificial Neural Networks with Keras",
@@ -310,7 +358,13 @@
         ],
         "description":"This module provides a foundational understanding of neural networks, particularly focusing on implementations using the Keras library. It covers the basics of building, training, and evaluating neural networks for tasks like image and text recognition, emphasizing the ease of use and flexibility of Keras in simplifying complex neural network architectures.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     },{
         "module_name": "End-to-End Machine Learning Project",
         "module_number": 10,
@@ -332,6 +386,12 @@
         ],
         "description":"This modules guides through a complete machine learning project, from data collection and analysis to model training and fine-tuning. It covers practical aspects like cleaning data, choosing and optimizing models, and validating results, providing a structured approach to developing robust ML solutions by applying the techniques in a real-world scenario.",
         "status": 0,
-        "progress": 0
+        "progress": 0,
+        "student_metrics": {
+            "login_frequency": 0,
+            "time_on_platform": 0,
+            "recent_performances": [],
+            "overall_engagement_level": 0
+        }
     }   
 ]

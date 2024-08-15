@@ -34,14 +34,20 @@ def register_student(name, email, password):
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     with open('structure_student.json', 'r') as f:
         modules = json.load(f)
-    
+    # student_metrics =  {
+    #         "login_frequency": 0,
+    #         "time_on_platform": 0,
+    #         "recent_performances": [],
+    #         "overall_engagement_level": 0
+    #     }
     students_collection.add(
         documents=[name],
         metadatas=[{
             "name": name,
             "email": email,
             "password": hashed_password,
-            "modules": json.dumps(modules)
+            "modules": json.dumps(modules),
+            # "student_metrics": json.dumps(student_metrics)
         }],
         ids=[email]
     )
@@ -305,13 +311,13 @@ def update_module_status(module_name, email):
     )
 
 def get_module_status(module_number):
+    # not required
     result = modules_collection.get(ids=[f"module_{module_number}"])
     if result['metadatas']:
         return result['metadatas'][0].get('status', 0)
     return 0
 
 def update_lesson_status(email, module_name, lesson_index, status):
-    print('ERRRROR ______++++++++++++++++++++++>>>>>>>> configg')
     student_details = get_student_details(email)
     modules = json.loads(student_details['modules'])
     for module in modules:
@@ -467,27 +473,34 @@ def check_module_completion(module_name,email):
     student_details = get_student_details(email)
     
     modules = json.loads(student_details['modules'])
+    # lessons = {}
+    print(module_name)
     for module in modules:
         if module['module_name'] == module_name:
             lessons = module['lessons']
-            break
-                
+            break      
+   
     return all(lesson['status'] in (1, '1') for lesson in lessons)
 
 def get_module_exercise(module_name):
+    #not needed
     mex = module_exercises_collection.get(
         ids=[f"exercises_{module_name}"]
     )
     return mex
 
-def store_module_exercise(new_result,email):
+def store_module_exercise(module_name,new_result,email):
+    print(new_result)
     student_details = get_student_details(email)
     modules = json.loads(student_details['modules'])
     for module in modules:
-        if module['module_name'] == 'Exercises':
-            module['results'] = new_result
+        if module['module_name'] == module_name:
+            for lesson in module['lessons']:
+                if lesson["name"] == 'Exercises': 
+                    lesson['results'] = new_result  
+            print(module)
             break
-        
+            
     students_collection.update(
         ids=[email],
         metadatas=[{"modules": json.dumps(modules)}]

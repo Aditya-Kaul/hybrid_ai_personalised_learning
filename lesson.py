@@ -268,17 +268,13 @@ def app():
             if 'current_lesson' in st.session_state:
                 if st.session_state.current_lesson['name'] == 'Exercises':
                     print('IN Exercises +++++++++++++ EXERCISEDSSSS ')
-                    res = get_module_exercise(module['module_name'])
                     exercise_context = next((lesson for lesson in module['lessons'] if lesson["name"] == 'Exercises'), None)
-                    ex_exists_ = 'results' in exercise_context
-                    mex_ = exercise_context['sub_topics']
                     
-                    ex_exists = 'results' in res['metadatas'][0]
-                    mex = json.loads(res['metadatas'][0]['exercises'])
+                    results = exercise_context['results']
+                    mex = exercise_context['sub_topics']
                     # exercise_form(mex)
                     responses = {}
-                    if ex_exists:
-                        results = json.loads(res['metadatas'][0]['results'])
+                    if results:
                         with st.form(key='questions_form'):
                             for index,question in enumerate(mex):
                                 key = f"response_{index}"
@@ -286,12 +282,12 @@ def app():
                                 responses[question] = st.text_area(question,value=default_value, key=key)
                             submit_button = st.form_submit_button(label='Submit')
                             if submit_button:
-                                store_module_exercise(responses,student_details['email'])
+                                store_module_exercise(module['module_name'],responses,student_details['email'])
                                 st.success("Thanks for your responses!")
                                 update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
-                                if check_module_completion(module['module_number'],student_details['email']):
-                                    update_module_status(student_details['email'],module['module_name'])
-                                    st.success(f"Module {module['module_number']} completed! Next module unlocked.")
+                                if check_module_completion(module['module_name'],student_details['email']):
+                                    update_module_status(module['module_name'],student_details['email'])
+                                    st.success(f"Module {module['module_name']} completed! Next module unlocked.")
                     else:
                         with st.form(key='questions_form'):
                             for index,question in enumerate(mex):
@@ -300,12 +296,12 @@ def app():
                             submit_button = st.form_submit_button(label='Submit')
                             
                             if submit_button:
-                                store_module_exercise(responses,student_details['email'])
+                                store_module_exercise(module['module_name'],responses,student_details['email'])
                                 st.success("Thanks for your responses!")
                                 update_lesson_status(student_details['email'],module['module_name'], st.session_state.current_lesson_index, 1)
-                                if check_module_completion(module['module_number'],student_details['email']):
-                                    update_module_status(student_details['email'],module['module_name'])
-                                    st.success(f"Module {module['module_number']} completed! Next module unlocked.")
+                                if check_module_completion(module['module_name'],student_details['email']):
+                                    update_module_status(module['module_name'],student_details['email'])
+                                    st.success(f"Module {module['module_name']} completed! Next module unlocked.")
                 else:
                     if st.session_state.get('generate_content', False):
                         with st.spinner('Generating lesson content...'):
@@ -334,16 +330,16 @@ def app():
                                     st.success('Hooray! Lesson completed!!', icon="🎉")
                                     # del st.session_state.quiz_submitted
                                     print('LESSON COMPLETED')
-                                    st.success("Lesson marked as complete!")
                                     refresh()
                                     st.rerun()
                             else:
                                 print('Please pass quiz to complete.')
                                 st.error('Please pass quiz to complete.', icon="⚠️")
                                 # st.toast('Please pass quiz to complete.', icon="⚠️")
-                            if check_module_completion(module['module_number'],student_details['email']):
+                            if check_module_completion(module['module_name'],student_details['email']):
                                 update_module_status(student_details['email'],module['module_name'])
-                                st.success(f"Module {module['module_number']} completed! Next module unlocked.")
+                                st.success(f"Module {module['module_name']} completed! Next module unlocked.")
+                            
                             
                     with col_qa:
                         if st.button("Open Q&A Chat",key="open_dialog"):

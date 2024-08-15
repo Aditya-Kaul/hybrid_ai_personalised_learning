@@ -69,9 +69,11 @@ def qa_chain_model(chunk_size: int = 1500, chunk_overlap: int = 150) -> Retrieva
         chain_type_kwargs={
             "prompt": PromptTemplate(
                 template="""
-                    You are an AI tutor assisting with questions about specific machine learning lessons.
+                    You are an AI tutor assisting with questions on the current machine learning lesson
+                    from the book 'Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow' by Aurélien Géron.
                     Use the following pieces of context to answer the question at the end.
                     Prioritize information from the generated lesson content if available.
+                    If the question asks for more details about "this lesson", provide information specifically about the detailed summary of context. 
                     If you don't know the answer based on the given context, 
                     say that you don't know and suggest asking for clarification about the specific lesson topic.
                     {context}

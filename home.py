@@ -182,7 +182,7 @@ def app():
         # Set page config
         student_details = get_student_details(st.session_state.email)
         modules = json.loads(student_details['modules'])
-        st.set_page_config(page_title="Tutor AI", layout="wide")
+        st.set_page_config(page_title="AIML Tutor", layout="wide")
         st.markdown(custom_css, unsafe_allow_html=True)
         if 'email' not in st.session_state or st.session_state.user_type != 'student':
             st.warning("Please login as a student")
@@ -196,7 +196,7 @@ def app():
         
         # show_feedback_notifications(modules)
         # Header
-        st.markdown('<div class="header"><span class="logo-title"> 🛡️ Tutor AI </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
+        st.markdown('<div class="header"><span class="logo-title"> 🛡️ AIML Tutor </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
         # exercise_data = get_module_exercise(module['module_name'])
         # has_new_feedback = 'tutor_feedback' in exercise_data['metadatas'][0] and not st.session_state.get('feedback_viewed', False)
         # print('tutor_feedback' in exercise_data['metadatas'][0])
@@ -216,19 +216,25 @@ def app():
         
         # print( student_progress.get('Classification', {}), 'some progress')
         for idx, module in enumerate(modules):
-            print(module)
             module_progress = module['progress']
 
             with cols[idx % 3]:
                 module_number = idx + 1
-                module_status = get_module_status(module_number)
+                # module_status = get_module_status(module_number)
 
-                if module_status == 1 or (module_number == 1) or (module_number > 1 and check_module_completion(module['module_name'],student_details['email'])):
-                    status_text = "Unlocked"
-                    button_disabled = False
-                else:
-                    status_text = "Locked"
-                    button_disabled = True
+                # if module['status'] == 1 or (module['module_number'] == 1) or (module['module_number'] > 1 and check_module_completion(module['module_name'],student_details['email'])):
+                #     button_disabled = False
+                # else:
+                #     button_disabled = True
+
+                previous_module_completed = True if module_number == 1 else check_module_completion(modules[idx-1]['module_name'], student_details['email'])
+        
+                button_disabled = not (module['status'] == 1 or module_number == 1 or (module_number > 1 and previous_module_completed))
+                
+                print(f"Module {module_number} - {module['module_name']}:")
+                print(f"  Status: {module['status']}")
+                print(f"  Previous module completed: {previous_module_completed}")
+                print(f"  Button disabled: {button_disabled}")
 
                 st.markdown(f"""
                 <div class="module">

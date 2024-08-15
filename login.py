@@ -53,7 +53,7 @@ custom_css = """
 
 import streamlit as st
 
-from new_config import authenticate_student, authenticate_tutor, register_student
+from new_config import authenticate_student, authenticate_tutor, register_student, create_tutor
 
 def app():
     st.set_page_config(page_title="Tutor AI - Login/Register", layout="wide")
@@ -61,7 +61,7 @@ def app():
 
     st.title("Tutor AI - Login/Register")
 
-    tab1, tab2, tab3 = st.tabs(["Student Login", "Student Registration", "Tutor Login"])
+    tab1, tab2, tab3, tab4 = st.tabs(["Student Login", "Student Registration","Tutor Register", "Tutor Login"])
 
     with tab1:
         st.header("Student Login")
@@ -86,7 +86,7 @@ def app():
         new_password = st.text_input("Choose a Password", type="password", key="new_password")
         confirm_password = st.text_input("Confirm Password", type="password", key="confirm_password")
 
-        if st.button("Register"):
+        if st.button("Register",key="student"):
             if new_password != confirm_password:
                 st.error("Passwords do not match")
             elif register_student(student_name, email_id, new_password):
@@ -95,6 +95,21 @@ def app():
                 st.error("Registration failed. Username or Student ID may already exist.")
 
     with tab3:
+        st.header("Tutor Registration")
+        student_name = st.text_input("Enter your name", key="r_tutor_username")
+        email_id = st.text_input("Enter your Email ID", key="tutor_email_id")
+        new_password = st.text_input("Choose a Password", type="password", key="tnew_password")
+        confirm_password = st.text_input("Confirm Password", type="password", key="t_confirm_password")
+
+        if st.button("Register",key="tutor"):
+            if new_password != confirm_password:
+                st.error("Passwords do not match")
+            elif create_tutor(student_name, email_id, new_password):
+                st.success("Registration successful! You can now log in.")
+            else:
+                st.error("Registration failed. Tutor may already exist.")
+
+    with tab4:
         st.header("Tutor Login")
         tutor_email = st.text_input("Email", key="tutor_e")
         tutor_password = st.text_input("Password", type='password', key="tutor_p")
