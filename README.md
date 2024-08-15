@@ -282,5 +282,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - The open-source community for various libraries and tools used in this project.
 
 ---
-
-For additional information or support, please contact the project maintainers or open an issue on the GitHub repository.
