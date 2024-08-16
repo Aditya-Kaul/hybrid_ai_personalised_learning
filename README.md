@@ -1,7 +1,7 @@
-# AIML Tutor: AI-Powered Personalized Learning System
+# ML Mentor: A Human-in-the-Loop Approach to Personalized Machine Learning Education
 
 ## Table of Contents
-- [AIML Tutor: AI-Powered Personalized Learning System](#aiml-tutor-ai-powered-personalized-learning-system)
+- [ML Mentor: A Human-in-the-Loop Approach to Personalized Machine Learning Education](#ml-mentor-a-human-in-the-loop-approach-to-personalized-machine-learning-education)
   - [Table of Contents](#table-of-contents)
   - [Introduction](#introduction)
   - [Features](#features)
