@@ -179,21 +179,26 @@ def navigation():
                 del st.session_state[key]
             st.rerun()
 
-# def show_feedback_notification():
-#     notification_container = st.empty()
-#     notification_html = """
-#     <div class="feedback-notification">
-#         <span class="close-button" onclick="this.parentElement.style.display='none';">&times;</span>
-#         <h4>New Feedback Available!</h4>
-#         <p>Your tutor has provided feedback on your recent module. Click 'View Feedback' to see details.</p>
-#     </div>
-#     """
-#     notification_container.markdown(notification_html, unsafe_allow_html=True)
+def show_feedback_notification(module):
+    exercise_lesson = next((lesson for lesson in module['lessons'] if lesson['name'] == 'Exercises'), None)
     
-    # if st.button("View Feedback"):
-    #     notification_container.empty()
-    #     return True
-    # return False
+    if exercise_lesson and 'tutor_feedback' in exercise_lesson and not st.session_state.get(f'feedback_viewed_{module["module_name"]}', False):
+        notification_container = st.empty()
+        tutor_feedback = exercise_lesson['tutor_feedback']
+        notification_html = f"""
+        <div class="feedback-notification">
+            <span class="close-button" onclick="this.parentElement.style.display='none';">&times;</span>
+            <h4>New Feedback Available!</h4>
+            <p>Your tutor has provided feedback on your recent module. Click 'View Feedback' to see details.</p>
+        </div>
+        """
+        notification_container.markdown(notification_html, unsafe_allow_html=True)
+        
+        if st.button("View Feedback"):
+            st.session_state[f'feedback_viewed_{module["module_name"]}'] = True
+            needs_review = apply_feedback(module['module_name'], st.session_state.email)
+            st.info(f"Based on the tutor's feedback, you need to review this module. Here is tutor feedback: {tutor_feedback}")
+            notification_container.empty()
 
 def calculate_progress(module):
    
@@ -221,25 +226,24 @@ def app():
         st.markdown(custom_css, unsafe_allow_html=True)
         
         # Header
-        st.markdown('<div class="header"><span class="logo-title"> 🛡️ AIML Tutor </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
+        st.markdown('<div class="header"><span class="logo-title"> 🛡️ ML Mentor </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
 
         # Main content
         if 'current_module' not in st.session_state:
             st.warning("Please select a module from the home page.")
             return
 
-        # exercise_data = get_module_exercise(module['module_name'])
-        # has_new_feedback = 'tutor_feedback' in exercise_data['metadatas'][0] and not st.session_state.get('feedback_viewed', False)
-        # print('tutor_feedback' in exercise_data['metadatas'][0])
-        # print(st.session_state.get('feedback_viewed', False))
-        # if has_new_feedback:
-        #     view_feedback = show_feedback_notification()
-        #     if view_feedback:
-        #         st.session_state.feedback_viewed = True
-        #         needs_review = apply_feedback(module['module_name'])
+        exercise_data = next((lesson for lesson in module['lessons'] if lesson["name"] == 'Exercises'), None)
+        
+        print(st.session_state.get('feedback_viewed', False))
+        if exercise_data['tutor_feedback']:
+            view_feedback = show_feedback_notification()
+            if view_feedback:
+                st.session_state.feedback_viewed = True
+                needs_review = apply_feedback(module['module_name'])
                 
-        #         if needs_review:
-        #             st.warning("Based on the tutor's feedback, you need to review this module.")
+                if needs_review:
+                    st.warning("Based on the tutor's feedback, you need to review this module.")
                     
         
         st.title(module['module_name'])

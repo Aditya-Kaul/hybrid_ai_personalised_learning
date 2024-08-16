@@ -31,7 +31,7 @@
 
 ML Mentor is an innovative, AI-powered personalized learning system designed to revolutionize the way students learn machine learning concepts. Built around the textbook "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron, this system provides an adaptive, interactive learning experience tailored to each student's needs.
 
-The project aims to address common challenges in e-learning, such as lack of personalization, immediate feedback, and adaptive content. By leveraging advanced AI technologies, including large language models and recommendation systems, AIML Tutor creates a dynamic learning environment that evolves with the student's progress.
+The project aims to address common challenges in e-learning, such as lack of personalization, immediate feedback, and adaptive content. By leveraging advanced AI technologies, including large language models and recommendation systems, ML Mentor creates a dynamic learning environment that evolves with the student's progress.
 
 ## Features
 
@@ -47,7 +47,7 @@ The project aims to address common challenges in e-learning, such as lack of per
 
 ## System Architecture
 
-The AIML Tutor system is built on a layered architecture, ensuring modularity, scalability, and ease of maintenance. The main components are:
+The ML Mentor system is built on a layered architecture, ensuring modularity, scalability, and ease of maintenance. The main components are:
 
 1. **User Interface Layer**
    - Student Portal
@@ -230,9 +230,9 @@ For more specific issues, consult the error logs or reach out to the development
 
 ### System Architecture Diagram
 
-The following diagram illustrates the high-level architecture of the AIML Tutor system:
+The following diagram illustrates the high-level architecture of the ML Mentor system:
 
-![AIML Tutor System Architecture](assets/arc.png)
+![ML Mentor System Architecture](assets/arc.png)
 
 This diagram showcases the interconnections between the User Interface Layer, Application Layer, Data Layer, and AI and Machine Learning Layer, providing a clear overview of how different components interact within the system.
 
@@ -252,7 +252,7 @@ The tutor dashboard allows for monitoring student progress, reviewing exercises,
 
 ### Learning Flow Diagram
 
-The following flowchart illustrates the typical learning journey of a student using AIML Tutor:
+The following flowchart illustrates the typical learning journey of a student using ML Mentor:
 
 ![Learning Flow Diagram](assets/adaptive_flow_chart.png)
 
@@ -260,7 +260,7 @@ This diagram helps visualize the steps a student goes through from logging in to
 
 ## Contributing
 
-We welcome contributions to the AIML Tutor project! Please follow these steps:
+We welcome contributions to the ML Mentor project! Please follow these steps:
 
 1. Fork the repository.
 2. Create a new branch for your feature or bug fix.

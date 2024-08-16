@@ -152,12 +152,11 @@ def navigation():
 def show_feedback_notifications(modules):
     for module in modules:
         module_name = module['module_name']
-        exercise_data = get_module_exercise(module_name)
+        exercise_lesson = next((lesson for lesson in module['lessons'] if lesson['name'] == 'Exercises'), None)
         
-        if 'tutor_feedback' in exercise_data['metadatas'][0] and not st.session_state.get(f'feedback_viewed_{module_name}', False):
-        # if 'tutor_feedback' in exercise_data['metadatas'][0]:
+        if exercise_lesson['tutor_feedback'] and not st.session_state.get(f'feedback_viewed_{module_name}', False):
             notification_container = st.empty()
-            tutor_feedback = exercise_data['metadatas'][0]['tutor_feedback']
+            tutor_feedback = exercise_lesson['tutor_feedback']
             notification_html = f"""
             <div class="feedback-notification" id="notification_{module_name}">
                 <span class="close-button" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -169,11 +168,8 @@ def show_feedback_notifications(modules):
             
             if st.button(f"View Feedback for {module_name}"):
                 st.session_state[f'feedback_viewed_{module_name}'] = True
-                needs_review = apply_feedback(module_name)
-                # print(needs_review)
-                # if needs_review:
+                needs_review = apply_feedback(module_name, st.session_state.email)
                 st.info(f"Based on the tutor's feedback, you need to review the {module_name} module. Here is tutor feedback: {tutor_feedback}")
-
                 notification_container.empty()
 
 def app():
@@ -182,7 +178,7 @@ def app():
         # Set page config
         student_details = get_student_details(st.session_state.email)
         modules = json.loads(student_details['modules'])
-        st.set_page_config(page_title="AIML Tutor", layout="wide")
+        st.set_page_config(page_title="ML Mentor", layout="wide")
         st.markdown(custom_css, unsafe_allow_html=True)
         if 'email' not in st.session_state or st.session_state.user_type != 'student':
             st.warning("Please login as a student")
@@ -194,21 +190,10 @@ def app():
         navigation()
         # logging.debug(f"Home: Modules retrieved: {modules}")
         
-        # show_feedback_notifications(modules)
+        show_feedback_notifications(modules)
         # Header
-        st.markdown('<div class="header"><span class="logo-title"> 🛡️ AIML Tutor </span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
-        # exercise_data = get_module_exercise(module['module_name'])
-        # has_new_feedback = 'tutor_feedback' in exercise_data['metadatas'][0] and not st.session_state.get('feedback_viewed', False)
-        # print('tutor_feedback' in exercise_data['metadatas'][0])
-        # print(st.session_state.get('feedback_viewed', False))
-        # if has_new_feedback:
-        #     view_feedback = show_feedback_notification()
-        #     if view_feedback:
-        #         st.session_state.feedback_viewed = True
-        #         needs_review = apply_feedback(module['module_name'])
-                
-        #         if needs_review:
-        #             st.warning("Based on the tutor's feedback, you need to review this module.")
+        st.markdown('<div class="header"><span class="logo-title"> 🛡️ ML Mentor  /span><span class="user-info">{}</span></div>'.format(student_details['name']), unsafe_allow_html=True)
+
         # Main content
         st.title('All "Machine Learning" Courses')
         st.write(f"Your personalized course has {len(modules)} modules")
