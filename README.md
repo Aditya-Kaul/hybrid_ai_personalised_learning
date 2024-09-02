@@ -29,7 +29,9 @@
 
 ## Introduction
 
+
 ML Mentor is an innovative, AI-powered personalized learning system designed to revolutionize the way students learn machine learning concepts. Built around the textbook "Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow" by Aurélien Géron, this system provides an adaptive, interactive learning experience tailored to each student's needs.
+
 
 The project aims to address common challenges in e-learning, such as lack of personalization, immediate feedback, and adaptive content. By leveraging advanced AI technologies, including large language models and recommendation systems, AIML Tutor creates a dynamic learning environment that evolves with the student's progress.
 
@@ -280,5 +282,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - The Streamlit team for their excellent web application framework.
 - Google's AI team for the Gemini model.
 - The open-source community for various libraries and tools used in this project.
-
----
