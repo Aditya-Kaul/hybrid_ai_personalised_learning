@@ -1,0 +1,257 @@
+[   
+    {
+  "module_name": "The Machine Learning Landscape",
+  "module_number": 1,
+  "lessons": [
+    { "name": "What Is Machine Learning?", "status": 0 },
+    { "name": "Why Use Machine Learning?", "status": 0 },
+    {
+      "name": "Types of Machine Learning Systems",
+      "status": 0,
+      "sub_topics": [
+        "Supervised/Unsupervised Learning",
+        "Batch and Online Learning",
+        "Instance-Based Versus Model-Based Learning"
+      ]
+    },
+    {
+      "name": "Main Challenges of Machine Learning",
+      "status": 0,
+      "sub_topics": [
+        "Insufficient Quantity of Training Data",
+        "Nonrepresentative Training Data",
+        "Poor-Quality Data",
+        "Irrelevant Features",
+        "Overfitting the Training Data",
+        "Underfitting the Training Data",
+        "Stepping back"
+      ]
+    },
+    {
+      "name": "Testing and Validating",
+      "status": 0,
+      "sub_topics": [
+        "Hyperparameter Tuning and Model Selection",
+        "Data Mismatch"
+      ]
+    },
+    { "name": "Exercises", "status": 0, "sub_topics": [] }
+  ],
+  "description": "This module introduces the basics of machine learning, exploring different types, including supervised and unsupervised learning. It discusses the challenges of ML, such as overfitting and underfitting, and the importance of having a well-representative training set for successful model generalization.",
+  "status": 0
+},
+    {
+        "module_name": "End-to-End Machine Learning Project",
+        "module_number": 2,
+        "lessons": [
+            {"name": "Look at the big picture", "status": 0, "sub_topics": []},
+            {"name": "Get the data", "status": 0, "sub_topics": []},
+            {"name": "Discover and visualize the data to gain insights", "status": 0, "sub_topics": []},
+            {"name": "Prepare the data for Machine Learning algorithms", "status": 0, "sub_topics": []},
+            {"name": "Select a model and train it", "status": 0, "sub_topics": []},
+            {"name": "Fine-tune your model", "status": 0, "sub_topics": []},
+            {"name": "Present your solution", "status": 0, "sub_topics": []},
+            {"name": "Launch, monitor, and maintain your system", "status": 0, "sub_topics": [] },
+            {"name": "Exercises", "status": 0, "sub_topics": []}
+        ],
+        "description":"This modules guides through a complete machine learning project, from data collection and analysis to model training and fine-tuning. It covers practical aspects like cleaning data, choosing and optimizing models, and validating results, providing a structured approach to developing robust ML solutions by applying the techniques in a real-world scenario.",
+        "status": 0
+    },
+    {
+        "module_name": "Classification",
+        "module_number": 3,
+        "lessons": [
+            {"name": "MNIST", "status": 0,"sub_topics": []},
+            {"name": "Training a Binary Classifier", "status": 0,"sub_topics": []},
+            {"name": "Performance Measures", "status": 0,
+                    "sub_topics": [
+                        "Confusion Matrix",
+                        "Precision and Recall",
+                        "Precision/Recall Tradeoff",
+                        "The ROC Curve"
+                    ]},
+            {"name": "Multiclass Classification", "status": 0,"sub_topics": []},
+            {"name": "Error Analysis", "status": 0,"sub_topics": []},
+            {"name": "Multilabel Classification", "status": 0,"sub_topics": []},
+            {"name": "Multioutput Classification", "status": 0,"sub_topics": []},
+            {"name": "Exercises", "status": 0, "sub_topics": []}
+        ],
+        "description":"This module delves into methods for categorizing objects or data. It primarily focuses on binary classifiers, performance measures like precision and recall, and handling more complex scenarios through techniques like multiclass and multilabel classification.",
+        "status": 0
+    },
+    {
+        "module_name": "Training Models",
+        "module_number": 4,
+        "lessons": [
+            {"name": "Linear Regression", "status": 0,"sub_topics": ["The Normal Equation"]},
+            {"name": "Gradient Descent", "status": 0,
+                    "sub_topics": [
+                        "Batch Gradient Descent",
+                        "Stochastic Gradient Descent",
+                        "Mini-batch Gradient Descent"
+                    ]},
+            {"name": "Polynomial Regression", "status": 0,"sub_topics": []},
+            {"name": "Learning Curves", "status": 0,"sub_topics": []},
+            {"name": "Regularized Linear Models", "status": 0,
+                    "sub_topics": [
+                        "Ridge Regression",
+                        "Lasso Regression",
+                        "Early Stopping",
+                        "Elastic Net"
+                    ]},
+            {"name": "Logistic Regression", "status": 0,
+                    "sub_topics": [
+                        "Estimating Probabilities",
+                        "Training and Cost Function",
+                        "Decision Boundaries",
+                        "Softmax Regression"
+                    ]},
+            {"name": "Exercises", "status": 0,"sub_topics":[]}
+        ],
+        "description":"The modules overs the fundamentals of training machine learning models, focusing on different algorithms like Linear Regression, Logistic Regression, and various types of Gradient Descent. It provides an in-depth look at how models learn from data, adjust their parameters, and the intricacies of regularization to prevent overfitting.",
+        "status": 0
+    },
+    {
+        "module_name": "Support Vector Machines",
+        "module_number": 5,
+        "lessons": [
+            {"name": "Linear SVM Classification", "status": 0,
+                    "sub_topics": [
+                        "Soft Margin Classification"
+                    ]},
+            {"name": "Nonlinear SVM Classification", "status": 0,
+                    "sub_topics": [
+                        "Polynomial Kernel",
+                        "Adding Similarity Features",
+                        "Gaussian RBF Kernel",
+                        "Computational Complexity"
+                    ]},
+            {"name": "SVM Regression", "status": 0, "sub_topics": []},
+            {"name": "Under the Hood", "status": 0, 
+                    "sub_topics": [
+                        "Decision Function and Predictions",
+                        "Training the SVM Classifier",
+                        "Quadratic Programming",
+                        "The Dual Problem",
+                        "Kernelized SVM",
+                        "Online SVMs",
+                        "Hinge Loss"
+                    ]},
+            { "name": "Exercises", "status": 0,"sub_topics": [] }
+        ],
+        "description":"This module explores SVMs, a powerful set of supervised learning methods used for classification, regression, and outlier detection. It explains how SVMs can efficiently perform linear classification and introduces the kernel trick for handling nonlinear scenarios, making SVMs versatile for various complex datasets.",
+        "status": 0
+    },
+    {
+        "module_name": "Decision Trees",
+        "module_number": 6,
+        "lessons": [
+            {"name": "Training and Visualizing a Decision Tree", "status": 0,"sub_topics": []},
+            {"name": "Making Predictions", "status": 0,"sub_topics": []},
+            {"name": "Estimating Class Probabilities", "status": 0,"sub_topics": []},
+            {"name": "The CART Training Algorithm", "status": 0,"sub_topics": []},
+            {"name": "Computational Complexity", "status": 0,"sub_topics": []},
+            {"name": "Gini Impurity or Entropy?", "status": 0,"sub_topics": []},
+            {"name": "Regularization Hyperparameters", "status": 0,"sub_topics": []},
+            {"name": "Regression", "status": 0,"sub_topics": []},
+            {"name": "Instability", "status": 0,"sub_topics": []},
+            {"name": "Exercises", "status": 0,"sub_topics": []}
+        ],
+        "description":"This module discusses how to use decision trees for both classification and regression tasks. It outlines how trees can be trained, visualized, and used for making predictions, highlighting their intuitive nature and versatility. The chapter also covers techniques to control overfitting through parameters and the concept of using trees in ensemble methods like Random Forests.",
+        "status": 0
+    },
+    {
+        "module_name": "Ensemble Learning and Random Forests",
+        "module_number": 7,
+        "lessons": [
+            {"name": "Voting Classifiers", "status": 0,"sub_topics": []},
+            {"name": "Bagging and Pasting", "status": 0,"sub_topics": ["Bagging and Pasting","Out-of-bag Evaluation"]},
+            {"name": "Random Patches and Random Subspaces", "status": 0, "sub_topics": []},
+            {"name": "Random Forests", "status": 0, "sub_topics": ["Extra-Trees","Feature Importance"]},
+            {"name": "Boosting", "status": 0, "sub_topics": ["AdaBoost", "Gradient Boosting"]},
+            {"name": "Stacking", "status": 0,"sub_topics": []},
+            {"name": "Exercises", "status": 0, "sub_topics": []}
+        ],
+        "description":"This module explores strategies for improving machine learning predictions by combining multiple models. It details methods like bagging, boosting, and stacking, with a focus on Random Forests—a robust ensemble technique that improves decision trees' performance by averaging multiple trees' predictions to reduce overfitting and enhance generalization.",
+        "status": 0
+    },
+    {
+        "module_name": "Dimensionality Reduction",
+        "module_number": 8,
+        "lessons": [
+            {"name": "The Curse of Dimensionality", "status": 0, "sub_topics": []},
+            {"name": "Main Approaches for Dimensionality Reduction", "status": 0,
+                    "sub_topics": ["Projection", "Manifold Learning"]},
+            {"name": "PCA", "status": 0, 
+                    "sub_topics":[
+                        "Preserving Variance",
+                        "Principal Components",
+                        "Projecting Down to d Dimensions",
+                        "Using Scikit-Learn",
+                        "Explained Variance Ratio",
+                        "Choosing the Right Number of Dimensions",
+                        "PCA for Compression",
+                        "Randomized PCA",
+                        "Incremental PCA"
+                    ]
+            },
+            {"name": "Kernel PCA", "status": 0, "sub_topics":["Selecting a Kernel and Tuning Hyperparameters"]},
+            {"name": "LLE", "status": 0,"sub_topics":[]},
+            {"name": "Other Dimensionality Reduction Techniques: MDS, Isomap, and t-SNE, LDA", "status": 0,"sub_topics":[]},
+            {"name": "Exercises", "status": 0,"sub_topics":[]}
+        ],
+        "description":"This module addresses techniques to simplify complex datasets while preserving their essential characteristics. It explains Principal Component Analysis (PCA), Kernel PCA, and Linear Discriminant Analysis (LDA) among other methods, illustrating how reducing the number of variables can improve model efficiency and performance on high-dimensional data.",
+        "status": 0
+    },    
+    {
+        "module_name": "Unsupervised Learning Techniques",
+        "module_number": 9,
+        "lessons": [
+            {"name": "Clustering", "status": 0, 
+                    "sub_topics":[
+                        "K-Means",
+                        "Limits of K-Means",
+                        "Using Clustering for Image Segmentation",
+                        "Using Clustering for Preprocessing",
+                        "Using Clustering for Semi-Supervised Learning",
+                        "DBSCAN"]},
+            {"name": "Gaussian Mixtures", "status": 0, 
+                    "sub_topics":[
+                        "Anomaly Detection Using Gaussian Mixtures",
+                        "LIKELIHOOD FUNCTION",
+                        "Bayesian Gaussian Mixture Models"
+                    ]},
+            {"name": "Other Algorithms for Anomaly and Novelty Detection", "status": 0, 
+                    "sub_topics":[
+                        "One-class SVM",
+                        "Fast-MCD (minimum covariance determinant)",
+                        "Isolation Forest",
+                        "Local Outlier Factor (LOF)"
+                    ]},
+            {"name": "Exercises", "status": 0, "sub_topics":[]}
+        ],
+        "description":"This module covers methods for analyzing data without pre-labeled responses, focusing on clustering, visualization, and dimensionality reduction. It introduces algorithms like K-Means, DBSCAN, and hierarchical clustering, along with methods for anomaly detection and association rule learning, showcasing their utility in discovering hidden patterns in data.",
+        "status": 0
+    },
+    {
+        "module_name": "Introduction to Artificial Neural Networks with Keras",
+        "module_number": 10,
+        "lessons": [
+            {"name": "Introduction to ANNs", "status": 0, "sub_topics":[]},
+            {"name": "Installing TensorFlow 2", "status": 0, "sub_topics":[]},
+            {"name": "Building an Image Classifier Using the Sequential API", "status": 0, "sub_topics":[]},
+            {"name": "Compiling the Model", "status": 0,"sub_topics":[]},
+            {"name": "Training and Evaluating the Model", "status": 0,"sub_topics":[]},
+            {"name": "Using the Model to Make Predictions", "status": 0,"sub_topics":[]},
+            {"name": "Building Complex Models Using the Functional API", "status": 0,"sub_topics":[]},
+            {"name": "Saving and Restoring a Model", "status": 0,"sub_topics":[]},
+            {"name": "Using Callbacks", "status": 0,"sub_topics":[]},
+            {"name": "TensorBoard", "status": 0,"sub_topics":[]},
+            {"name": "Fine-Tuning Neural Network Hyperparameters", "status": 0,"sub_topics":[]},
+            {"name": "Transfer Learning", "status": 0,"sub_topics":[]},
+            {"name": "Exercises", "status": 0,"sub_topics":[]}
+        ],
+        "description":"This module provides a foundational understanding of neural networks, particularly focusing on implementations using the Keras library. It covers the basics of building, training, and evaluating neural networks for tasks like image and text recognition, emphasizing the ease of use and flexibility of Keras in simplifying complex neural network architectures.",
+        "status": 0
+    }   
+]
