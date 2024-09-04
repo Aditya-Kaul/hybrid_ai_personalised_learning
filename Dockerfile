@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir pysqlite3-binary==0.5.1
 EXPOSE 8501
 
 # Create and set environment variables
-ENV GOOGLE_API_KEY=your_google_api_key_here
+ENV GOOGLE_API_KEY="AIzaSyDjs6-jQNsmYFcqK54Mk5zsPDIBwJlk29E"
 
 # Run app.py when the container launches
 CMD ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
