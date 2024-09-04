@@ -4,8 +4,10 @@ import home
 import lesson
 import login
 import tutor_dashboard
-import sqlite_patch
+import sys
+import pysqlite3
 
+sys.modules['sqlite3'] = pysqlite3
 # from google.cloud import storage
 # BUCKET_NAME = 'streamlit_chromadb_bucket'
 # storage_client = storage.Client()
