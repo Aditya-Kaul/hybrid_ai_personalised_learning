@@ -4,6 +4,7 @@ import home
 import lesson
 import login
 import tutor_dashboard
+import sqlite_patch
 
 # from google.cloud import storage
 # BUCKET_NAME = 'streamlit_chromadb_bucket'
