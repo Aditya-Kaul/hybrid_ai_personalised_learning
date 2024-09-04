@@ -233,14 +233,14 @@ def load_textbook_to_chroma(pdf_path):
             ids=[f"textbook_chunk_{i}"]
         )
 
-def load_textbook_to_chroma(pdf_path):
-    chunks = pdf_loader(pdf_path)
-    for i, chunk in enumerate(chunks):
-        textbook_collection.add(
-            documents=[chunk['text']],
-            metadatas=[{"source": "textbook", "image": json.dumps(chunk['images']),"page": chunk["page"], }],
-            ids=[f"textbook_chunk_{i}"]
-        )
+# def load_textbook_to_chroma(pdf_path):
+#     chunks = pdf_loader(pdf_path)
+#     for i, chunk in enumerate(chunks):
+#         textbook_collection.add(
+#             documents=[chunk['text']],
+#             metadatas=[{"source": "textbook", "image": json.dumps(chunk['images']),"page": chunk["page"], }],
+#             ids=[f"textbook_chunk_{i}"]
+#         )
 
 def store_generated_lesson(module_name, lesson_name, content, email):
     lessons_collection.add(
