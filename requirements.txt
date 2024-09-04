@@ -1,4 +1,5 @@
 streamlit>=1.31.1,<2.0.0
+pysqlite3-binary==0.5.2
 langchain>=0.0.352,<0.1.0
 langchain-community>=0.0.13,<0.1.0
 langchain-google-genai>=0.0.5,<0.1.0

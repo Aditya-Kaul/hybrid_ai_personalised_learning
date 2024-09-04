@@ -10,6 +10,11 @@ import fitz
 import streamlit as st
 import os
 
+
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 # Initialize ChromaDB client
 client = chromadb.PersistentClient(path="./chroma_db")
 
