@@ -505,7 +505,7 @@ def store_module_exercise(module_name,new_result,email):
     )
 
 # Initialization code
-pdf_path = 'data/Text Book/Hands-On Machine Learning.pdf'
+pdf_path = 'data/Text Book/Hands-On Machine Learning_Text_Book.pdf'
 
 # if modules_collection.count() == 0:
 #     print('creating json data')
