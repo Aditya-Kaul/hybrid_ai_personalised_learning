@@ -1,4 +1,3 @@
-// entire file content ...
 import os
 
 def chunk_pdf(file_path):
