@@ -1,0 +1,2 @@
+litellm
+pymupdf4llm
