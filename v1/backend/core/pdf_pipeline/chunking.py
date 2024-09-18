@@ -21,7 +21,7 @@ def paragraphs(doc):
     yield doc[start:]
 
 
-def chunk_pdf(file_path: str, out_path: str, chunk_size: int = 20, chunk_overlap: int = 10) -> List[str]:
+def chunk_pdf(file_path: str, out_path: str, chunk_size: int = 125, chunk_overlap: int = 10) -> List[str]:
     """
     Chunks a PDF file into smaller segments with configurable chunk size and overlap
     """
