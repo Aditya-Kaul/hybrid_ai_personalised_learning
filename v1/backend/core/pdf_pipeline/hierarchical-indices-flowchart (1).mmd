@@ -1,0 +1,16 @@
+graph TD
+    A[Start] --> B[Receive Query]
+    B --> C[Identify Relevant Top-Level Index]
+    C --> D[Traverse to Sub-Indices]
+    D --> E[Retrieve Relevant Documents]
+    E --> F[Aggregate Results]
+    F --> G[Return Hierarchical Results]
+    G --> H[End]
+
+    subgraph Ingestion
+        I[Prepare Content] --> J[Create Top-Level Summaries]
+        J --> K[Generate Sub-Summaries]
+        K --> L[Create Leaf-Node Documents]
+        L --> M[Build Hierarchical Index]
+        M --> N[Store in Vector Database]
+    end
