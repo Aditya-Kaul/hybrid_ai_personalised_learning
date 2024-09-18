@@ -11,16 +11,23 @@ This module provides functionalities for content analysis and summarization, inc
 - Hierarchical index building: Builds a hierarchical index to represent the structure and organization of the content.
 - Compression template generation: Creates templates for compressing the content while preserving essential information.
 """
+
 import json
+import os
+import spacy
 import litellm
 import asyncio
-from typing import List, Dict, Any
-import spacy
-from langchain.text_splitter import MarkdownTextSplitter
 import pymupdf4llm
+
+from typing import List, Dict, Any
+
+from langchain.text_splitter import MarkdownTextSplitter
+
+from litellm import RateLimitError
 
 # Configure LiteLLM
 litellm.set_verbose = True
+
 
 def paragraphs(doc):
     start = 0
@@ -30,6 +37,7 @@ def paragraphs(doc):
             start = token.i
     yield doc[start:]
 
+
 def chunk_pdf(file_path: str, chunk_size: int = 125, chunk_overlap: int = 10) -> List[str]:
     md_text = pymupdf4llm.to_markdown(file_path)
     nlp = spacy.load("en_core_web_trf")
@@ -37,9 +45,11 @@ def chunk_pdf(file_path: str, chunk_size: int = 125, chunk_overlap: int = 10) ->
     paragraphs_list = list(paragraphs(doc))
     paragraphs_text = [para.text for para in paragraphs_list]
 
-    splitter = MarkdownTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+    splitter = MarkdownTextSplitter(
+        chunk_size=chunk_size, chunk_overlap=chunk_overlap)
     chunks = splitter.create_documents(paragraphs_text)
     return [chunk.page_content for chunk in chunks]
+
 
 class HierarchicalIndexAdvanced:
     def __init__(self, file_path: str, chunk_size: int = 125, chunk_overlap: int = 10):
@@ -51,23 +61,41 @@ class HierarchicalIndexAdvanced:
         self.sub_summaries = []
         self.top_level_summary = ""
         self.hierarchical_structure = {}
+        self.retry_delay = 1  # Start with 1 second delay
 
     async def process_document(self):
-        self.chunks = chunk_pdf(self.file_path, self.chunk_size, self.chunk_overlap)
+        self.chunks = chunk_pdf(
+            self.file_path, self.chunk_size, self.chunk_overlap)
+
+    async def litellm_completion_with_retries(self, model: str, messages: List[Dict[str, str]], max_tokens: int, max_retries: int = 5):
+        for attempt in range(max_retries):
+            try:
+                return await litellm.acompletion(model=model, messages=messages, max_tokens=max_tokens)
+            except RateLimitError as e:
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(self.retry_delay)
+                    self.retry_delay *= 2  # Exponential backoff
+                else:
+                    raise e
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+                raise e
 
     async def identify_key_concepts(self):
         full_text = ' '.join(self.chunks)
-        prompt = f"Identify the top 10 key concepts from the following text. Provide only a comma-separated list of these concepts.\n\nText:\n{full_text[:4000]}"  # Limit to first 4000 chars to avoid token limits
-        response = await litellm.acompletion(
+        # Limit to first 4000 chars to avoid token limits
+        prompt = f"Identify the top 10 key concepts from the following text. Provide only a comma-separated list of these concepts.\n\nText:\n{full_text[:4000]}"
+        response = await self.litellm_completion_with_retries(
             model="mistral/mistral-medium",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=100
         )
-        self.key_concepts = [concept.strip() for concept in response.choices[0].message.content.split(',')]
+        self.key_concepts = [
+            concept.strip() for concept in response.choices[0].message.content.split(',')]
 
     async def generate_sub_summary(self, chunk_group: str) -> str:
         prompt = f"Provide a concise summary (2-3 sentences) of the following text:\n\n{chunk_group}"
-        response = await litellm.acompletion(
+        response = await self.litellm_completion_with_retries(
             model="gemini/gemini-pro",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=100
@@ -75,16 +103,20 @@ class HierarchicalIndexAdvanced:
         return response.choices[0].message.content.strip()
 
     async def generate_sub_summaries(self):
-        # Group chunks for sub-summaries (e.g., every 5 chunks)
-        chunk_groups = [' '.join(self.chunks[i:i+5]) for i in range(0, len(self.chunks), 5)]
-        self.sub_summaries = await asyncio.gather(
-            *[self.generate_sub_summary(group) for group in chunk_groups]
-        )
+        chunk_groups = [' '.join(self.chunks[i:i+5])
+                        for i in range(0, len(self.chunks), 5)]
+        self.sub_summaries = []
+        for group in chunk_groups:
+            summary = await self.generate_sub_summary(group)
+            self.sub_summaries.append(summary)
+            # Add a delay between requests to respect rate limits
+            await asyncio.sleep(1.5)
 
     async def generate_top_level_summary(self):
         full_text = ' '.join(self.chunks)
-        prompt = f"Provide a comprehensive summary (3-4 sentences) of the following text:\n\n{full_text[:4000]}"  # Limit to first 4000 chars
-        response = await litellm.acompletion(
+        # Limit to first 4000 chars
+        prompt = f"Provide a comprehensive summary (3-4 sentences) of the following text:\n\n{full_text[:4000]}"
+        response = await self.litellm_completion_with_retries(
             model="gemini/gemini-pro",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=150
@@ -93,12 +125,10 @@ class HierarchicalIndexAdvanced:
 
     async def build_hierarchical_index(self):
         await self.process_document()
-        await asyncio.gather(
-            self.identify_key_concepts(),
-            self.generate_sub_summaries(),
-            self.generate_top_level_summary()
-        )
-        
+        await self.identify_key_concepts()
+        await self.generate_sub_summaries()
+        await self.generate_top_level_summary()
+
         self.hierarchical_structure = {
             "key_concepts": {
                 concept: {
@@ -118,16 +148,26 @@ class HierarchicalIndexAdvanced:
     def get_hierarchical_index(self) -> Dict[str, Any]:
         return self.hierarchical_structure
 
+    def save_hierarchical_index(self, output_path: str):
+        with open(output_path, 'w', encoding='utf-8') as f:
+            json.dump(self.hierarchical_structure, f,
+                      ensure_ascii=False, indent=2)
+        print(f"Hierarchical index saved to {output_path}")
+
+
 async def main():
-    file_path = "v1/backend/core/pdf_pipeline/input.pdf"  # Replace with your PDF file path
+    # Replace with your PDF file path
+    file_path = "v1/backend/core/pdf_pipeline/input.pdf"
+    output_path = "v1/backend/core/pdf_pipeline/output.json"
     index = HierarchicalIndexAdvanced(file_path)
-    await index.build_hierarchical_index()
+    # Check if  Directory exists
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    result = index.get_hierarchical_index()
-
-    
-    print(json.dumps(result, indent=2))
+    try:
+        await index.build_hierarchical_index()
+        index.save_hierarchical_index(output_path)
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())
-

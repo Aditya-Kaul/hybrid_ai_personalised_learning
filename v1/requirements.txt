@@ -2,3 +2,4 @@ litellm
 pymupdf4llm
 spacy
 matplotlib
+fixit
