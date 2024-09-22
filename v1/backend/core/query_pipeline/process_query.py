@@ -25,11 +25,22 @@ class RAGKnowledgeProcessor:
         self.qa_model = pipeline("text2text-generation", model="valhalla/t5-base-qa-qg-hl")
         self.tokenizer = AutoTokenizer.from_pretrained("valhalla/t5-base-qa-qg-hl")
         self.retry_delay = 1
+        self.token_usage = {}
 
     async def litellm_completion_with_retries(self, model: str, messages: List[Dict[str, str]], max_tokens: int, max_retries: int = 5):
         for attempt in range(max_retries):
             try:
-                return await litellm.acompletion(model=model, messages=messages, max_tokens=max_tokens)
+                response = await litellm.acompletion(model=model, messages=messages, max_tokens=max_tokens)
+                
+                # Update token usage
+                if model not in self.token_usage:
+                    self.token_usage[model] = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+                
+                self.token_usage[model]["prompt_tokens"] += response.usage.prompt_tokens
+                self.token_usage[model]["completion_tokens"] += response.usage.completion_tokens
+                self.token_usage[model]["total_tokens"] += response.usage.total_tokens
+                
+                return response
             except litellm.RateLimitError as e:
                 if attempt < max_retries - 1:
                     await asyncio.sleep(self.retry_delay)
@@ -39,6 +50,8 @@ class RAGKnowledgeProcessor:
             except Exception as e:
                 print(f"Unexpected error: {e}")
                 raise e
+    
+
 
     def classify_query(self, query: str) -> str:
         key_concepts = list(self.data['key_concepts'].keys())
@@ -129,7 +142,8 @@ class RAGKnowledgeProcessor:
             "transformed_query": transformed_query,
             "lesson": lesson,
             "quiz": quiz,
-            "qna": qna
+            "qna": qna,
+            "token_usage": self.token_usage
         }
 
 # Usage example
