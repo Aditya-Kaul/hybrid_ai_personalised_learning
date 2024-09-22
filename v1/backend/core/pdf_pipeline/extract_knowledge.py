@@ -62,6 +62,8 @@ class HierarchicalIndexAdvanced:
         self.top_level_summary = ""
         self.hierarchical_structure = {}
         self.retry_delay = 1  # Start with 1 second delay
+        self.token_usage = {}
+
 
     async def process_document(self):
         self.chunks = chunk_pdf(
@@ -70,8 +72,18 @@ class HierarchicalIndexAdvanced:
     async def litellm_completion_with_retries(self, model: str, messages: List[Dict[str, str]], max_tokens: int, max_retries: int = 5):
         for attempt in range(max_retries):
             try:
-                return await litellm.acompletion(model=model, messages=messages, max_tokens=max_tokens)
-            except RateLimitError as e:
+                response = await litellm.acompletion(model=model, messages=messages, max_tokens=max_tokens)
+                
+                # Update token usage
+                if model not in self.token_usage:
+                    self.token_usage[model] = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+                
+                self.token_usage[model]["prompt_tokens"] += response.usage.prompt_tokens
+                self.token_usage[model]["completion_tokens"] += response.usage.completion_tokens
+                self.token_usage[model]["total_tokens"] += response.usage.total_tokens
+                
+                return response
+            except litellm.RateLimitError as e:
                 if attempt < max_retries - 1:
                     await asyncio.sleep(self.retry_delay)
                     self.retry_delay *= 2  # Exponential backoff
@@ -82,23 +94,24 @@ class HierarchicalIndexAdvanced:
                 raise e
 
     async def identify_key_concepts(self):
-        full_text = ' '.join(self.chunks)
+        #full_text = ' '.join(self.chunks)
         # Limit to first 4000 chars to avoid token limits
-        prompt = f"Identify the top 10 key concepts from the following text. Provide only a comma-separated list of these concepts.\n\nText:\n{full_text[:4000]}"
-        response = await self.litellm_completion_with_retries(
-            model="mistral/mistral-medium",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=100
-        )
-        self.key_concepts = [
-            concept.strip() for concept in response.choices[0].message.content.split(',')]
+        for chunk in self.chunks:
+            prompt = f"Identify the top 2 key concepts from the following text. Provide only a comma-separated list of these concepts.\n\nText:\n{chunk}"
+            response = await self.litellm_completion_with_retries(
+                model="mistral/mistral-medium",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=8192
+            )
+            self.key_concepts = [
+                concept.strip() for concept in response.choices[0].message.content.split(',')]
 
     async def generate_sub_summary(self, chunk_group: str) -> str:
         prompt = f"Provide a concise summary (2-3 sentences) of the following text:\n\n{chunk_group}"
         response = await self.litellm_completion_with_retries(
             model="gemini/gemini-pro",
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=100
+            max_tokens=8192
         )
         return response.choices[0].message.content.strip()
 
@@ -119,7 +132,7 @@ class HierarchicalIndexAdvanced:
         response = await self.litellm_completion_with_retries(
             model="gemini/gemini-pro",
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=150
+            max_tokens=8192
         )
         self.top_level_summary = response.choices[0].message.content.strip()
 
@@ -142,7 +155,8 @@ class HierarchicalIndexAdvanced:
                     "content": chunk,
                     "sub_summary": self.sub_summaries[i // 5] if i // 5 < len(self.sub_summaries) else None
                 } for i, chunk in enumerate(self.chunks)
-            }
+            },
+            "token_usage": self.token_usage
         }
 
     def get_hierarchical_index(self) -> Dict[str, Any]:
