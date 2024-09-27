@@ -49,6 +49,9 @@ Some additional setup steps might be necessary depending on your project's confi
     cp .env.example .env
     ```
 
+    Set the dotenv_path to your .env file path at backend.app.api.routes.py:18
+
+
 ## Running the Application
 
 With the installation and setup completed, you can now run the application:
@@ -58,7 +61,7 @@ With the installation and setup completed, you can now run the application:
     - For Node.js project:
 
       ```sh
-      npm start
+      npm run dev
       # or
       yarn start
       ```
