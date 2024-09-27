@@ -1,0 +1,7 @@
+<svg height="728px" width="961px">
+    <filter id="grainy">
+        <feTurbulence type="turbulence" baseFrequency="0.6"/>
+        <feComposite operator="in" in2="SourceGraphic" result="monoNoise"/>
+    </filter>
+   <path d="M335 221C533 96 64 -131 540 100C920.8 284.8 562 262.333 335 228M148 392C317 268 -340 -282 256 309C732.8 781.8 382.667 561.333 148 392Z" filter="url(#grainy)"/>
+</svg>

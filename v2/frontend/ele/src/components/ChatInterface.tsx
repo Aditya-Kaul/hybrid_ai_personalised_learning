@@ -55,7 +55,7 @@ export function ChatInterface() {
   }
 
   return (
-    <div className="flex flex-col h-[400px] w-[300px] border rounded-lg p-4">
+    <div className="flex flex-col h-full">
       <ScrollArea className="flex-grow mb-4" ref={scrollAreaRef}>
         {messages.map((message, index) => (
           <div key={index} className={`p-2 ${message.role === 'user' ? 'text-right' : 'text-left'}`}>
@@ -67,7 +67,7 @@ export function ChatInterface() {
           </div>
         ))}
       </ScrollArea>
-      <div className="flex mt-4">
+      <div className="flex mt-auto">
         <Input
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -76,7 +76,12 @@ export function ChatInterface() {
           onKeyPress={(e) => e.key === 'Enter' && handleSend()}
           disabled={isLoading}
         />
-        <Button onClick={handleSend} className="ml-2" disabled={isLoading}>
+        <Button 
+          onClick={handleSend} 
+          className="ml-2" 
+          disabled={isLoading}
+          style={{ backgroundColor: '#AF1B3F', color: 'white' }}
+        >
           {isLoading ? 'Sending...' : 'Send'}
         </Button>
       </div>
