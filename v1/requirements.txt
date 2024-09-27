@@ -1,8 +1,0 @@
-litellm
-pymupdf4llm
-spacy
-matplotlib
-fixit
-transformers
-rerankers
-torch

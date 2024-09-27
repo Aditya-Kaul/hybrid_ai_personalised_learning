@@ -1,3 +1,4 @@
 chroma_db/*
 __pycache__/*
 .aider*
+*.env
