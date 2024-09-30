@@ -1,0 +1,15 @@
+fastapi
+uvicorn
+python-multipart
+lancedb
+#older ones
+litellm
+pymupdf4llm
+spacy
+matplotlib
+fixit
+transformers
+rerankers
+torch
+pytest-asyncio
+sentence_transformers
