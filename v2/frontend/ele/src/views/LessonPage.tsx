@@ -73,7 +73,7 @@ export default function LessonPage() {
                 ) : (
                   <div className="prose max-w-none">
                     <ReactMarkdown>
-                      {lesson?.content || 'Select a concept to view the lesson'}
+                      {lesson || 'Select a concept to view the lesson'}
                     </ReactMarkdown>
                   </div>
                 )}

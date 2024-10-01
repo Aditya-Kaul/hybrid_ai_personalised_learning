@@ -16,7 +16,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Construct the path to the .env file
 dotenv_path = '/home/tso/hybrid_ai_personalised_learning/v2/backend/.env'
-
+# dotenv_path = '/Users/adityakoul/Desktop/hybrid_ai_personalised_learning/v2/backend/.env'
 # Load environment variables from the specified path
 load_dotenv(dotenv_path)
 
